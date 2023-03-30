@@ -1,0 +1,40 @@
+{
+  "name": "mwaa",
+  "version": "0.1.0-alpha.0",
+  "description": "Mocked version of Web Audio API",
+  "keywords": [
+    "web-audio-api",
+    "web-audio-api-mock",
+    "web-audio",
+    "web-audio-mock",
+    "testing",
+    "test",
+    "mock"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satelllte/mwaa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/satelllte/mwaa/issues"
+  },
+  "homepage": "https://github.com/satelllte/mwaa#readme",
+  "author": "@satelllte (https://github.com/satelllte)",
+  "maintainers": [
+    "@satelllte (https://github.com/satelllte)"
+  ],
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "sideEffects": false,
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {},
+  "scripts": {}
+}
