@@ -34,9 +34,10 @@
   "module": "dist/index.js",
   "sideEffects": false,
   "devDependencies": {
+    "typescript": "5.0.3",
     "vite": "4.2.1"
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build && tsc"
   }
 }

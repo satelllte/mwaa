@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "esnext",
+    "module": "esnext",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "pretty": true,
+    "declaration": true,  
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}

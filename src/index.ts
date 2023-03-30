@@ -1,4 +1,13 @@
-const x: number = 1
-const y: number = 2
+export class Inc {
+  private _x: number
+  
+  public get x(): number { return this._x }
 
-console.info('sum: ', x + y)
+  constructor(x: number = 0) {
+    this._x = x
+  }
+
+  public inc() {
+    this._x++
+  }
+}
