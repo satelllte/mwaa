@@ -33,8 +33,10 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "sideEffects": false,
-  "dependencies": {},
-  "devDependencies": {},
-  "peerDependencies": {},
-  "scripts": {}
+  "devDependencies": {
+    "vite": "4.2.1"
+  },
+  "scripts": {
+    "build": "vite build"
+  }
 }
