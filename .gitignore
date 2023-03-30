@@ -1,2 +1,13 @@
+# third-party modules
 node_modules
+
+# artifacts
 dist
+coverage
+
+# editors
+.idea
+.vscode
+
+# os
+.DS_Store

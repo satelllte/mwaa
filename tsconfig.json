@@ -3,6 +3,7 @@
     "outDir": "dist",
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "pretty": true,

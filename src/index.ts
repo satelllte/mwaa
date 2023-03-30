@@ -11,3 +11,5 @@ export class Inc {
     this._x++
   }
 }
+
+export { add } from './add'
