@@ -1,5 +1,8 @@
 import {log} from './utils/log'
-import {MockAudioContext} from './MockAudioContext'
+import {MockBaseAudioContext} from './MockBaseAudioContext'
+
+type ModuleName =
+| 'BaseAudioContext'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-extraneous-class
 export class MWAA {
@@ -8,10 +11,7 @@ export class MWAA {
 			throw new Error('[MWAA] already using mocked version of Web Audio API')
 		}
 
-		// @ts-expect-error store original
-		MWAA._originalAudioContext = globalThis.AudioContext
-		// @ts-expect-error replace original with mock
-		globalThis.AudioContext = MockAudioContext
+		MWAA._mock('BaseAudioContext', MockBaseAudioContext as unknown as BaseAudioContext, MWAA._originalBaseAudioContext)
 
 		MWAA._isMocked = true
 
@@ -23,8 +23,7 @@ export class MWAA {
 			throw new Error('[MWAA] already using the original version of Web Audio API')
 		}
 
-		// @ts-expect-error back to original
-		globalThis.AudioContext = MWAA._originalAudioContext
+		MWAA._unmock('BaseAudioContext', MWAA._originalBaseAudioContext)
 
 		MWAA._isMocked = false
 
@@ -32,5 +31,21 @@ export class MWAA {
 	}
 
 	private static _isMocked: boolean = false
-	private static _originalAudioContext: AudioContext
+	private static _originalBaseAudioContext: BaseAudioContext
+
+	private static _mock<T>(
+		name: ModuleName,
+		mock: T,
+		temp: T,
+	): void {
+		temp = globalThis[name] as T
+		(globalThis[name] as T) = mock
+	}
+
+	private static _unmock<T>(
+		name: ModuleName,
+		temp: T,
+	): void {
+		(globalThis[name] as T) = temp
+	}
 }

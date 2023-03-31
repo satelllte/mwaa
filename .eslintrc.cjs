@@ -19,6 +19,9 @@ module.exports = {
 				semi: 'off',
 				'@typescript-eslint/semi': ['error', 'never'],
 
+				// Turns off "readonly" enforcing in classes
+				'@typescript-eslint/prefer-readonly': 'off',
+
 				// Enforces all class members to explicitly indicate their accessibility
 				'@typescript-eslint/explicit-member-accessibility': 'error',
 
