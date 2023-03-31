@@ -1,3 +1,3 @@
-export const log = (message: string) => {
-  console.info(`[MWAA]`, message)
+export const log = (message: string): void => {
+	console.info('[MWAA]', message)
 }
