@@ -51,14 +51,7 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 		return this._outputLatency
 	}
 
-	public get sampleRate(): number {
-		return this._sampleRate
-	}
-
 	private static _defaultLatencyHint: AudioContextLatencyCategory | number = 'interactive'
-	private static _defaultSampleRate: number = 44100
-	private static _minSampleRate: number = 3000 // https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/platform/audio/AudioUtilities.cpp -> minAudioBufferSampleRate
-	private static _maxSampleRate: number = 192000 // https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/platform/audio/AudioUtilities.cpp -> maxAudioBufferSampleRate
 	private static _baseLatencyMin: number = 0.0001
 	private static _baseLatencyMax: number = 0.5000
 	private static _outputLatencyMin: number = 0.002
@@ -81,14 +74,6 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		throw new TypeError(`Failed to construct 'AudioContext': Failed to read the 'latencyHint' property from 'AudioContextOptions': The provided value ${latencyHint} is not a valid enum value of type AudioContextLatencyCategory.`)
-	}
-
-	private static _validateSampleRate(sampleRate: number): void {
-		if (sampleRate >= MockAudioContext._minSampleRate && sampleRate <= MockAudioContext._maxSampleRate) {
-			return
-		}
-
-		throw new DOMException(`Failed to construct 'AudioContext': The hardware sample rate provided (${sampleRate}) is outside the range [${MockAudioContext._minSampleRate}, ${MockAudioContext._maxSampleRate}]`)
 	}
 
 	private static _getBaseLatencyForHint(latencyHint: LatencyHint): number {
@@ -123,21 +108,16 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 		return MockAudioContext._outputLatencyForInteractiveHint
 	}
 
-	private _sampleRate: number
 	private _baseLatency: number
 	private _outputLatency: number
 
 	constructor(options?: AudioContextOptions) {
-		super()
+		super(options?.sampleRate)
 
 		const latencyHint: LatencyHint = options?.latencyHint ?? MockAudioContext._defaultLatencyHint
 		MockAudioContext._validateLatencyHint(latencyHint)
 
-		const sampleRate: number = options?.sampleRate ?? MockAudioContext._defaultSampleRate
-		MockAudioContext._validateSampleRate(sampleRate)
-
 		this._baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
 		this._outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
-		this._sampleRate = sampleRate
 	}
 }
