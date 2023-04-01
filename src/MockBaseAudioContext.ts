@@ -30,7 +30,7 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 | 'createWaveShaper'
 | 'decodeAudioData'
 > {
-	private constructor() {
+	constructor() {
 		throw new TypeError('Illegal constructor')
 	}
 }

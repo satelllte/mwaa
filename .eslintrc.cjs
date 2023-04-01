@@ -22,8 +22,13 @@ module.exports = {
 				// Turns off "readonly" enforcing in classes
 				'@typescript-eslint/prefer-readonly': 'off',
 
-				// Enforces all class members to explicitly indicate their accessibility
-				'@typescript-eslint/explicit-member-accessibility': 'error',
+				// Enforces all class members (except constructor) to explicitly indicate their accessibility
+				'@typescript-eslint/explicit-member-accessibility': ['error', {
+					accessibility: 'explicit',
+					overrides: {
+						constructors: 'no-public',
+					},
+				}],
 
 				// Enforces functions to explicitly indicate their return type
 				'@typescript-eslint/explicit-function-return-type': 'error',
