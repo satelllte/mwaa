@@ -1,4 +1,6 @@
-export class MockBaseAudioContext implements Omit<BaseAudioContext,
+import {MockBaseAudioContext} from './MockBaseAudioContext'
+
+export class MockAudioContext extends MockBaseAudioContext implements Omit<AudioContext,
 // EventTarget
 | 'addEventListener'
 | 'removeEventListener'
@@ -30,10 +32,20 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 | 'createStereoPanner'
 | 'createWaveShaper'
 | 'decodeAudioData'
+// AudioContext
+| 'close'
+| 'createMediaElementSource'
+| 'createMediaStreamDestination'
+| 'createMediaStreamSource'
+| 'getOutputTimestamp'
+| 'resume'
+| 'suspend'
 > {
-	protected constructor() {
-		if (new.target === MockBaseAudioContext) {
-			throw new TypeError('Illegal constructor')
-		}
+	public get baseLatency(): number {
+		return 0.0053
+	}
+
+	public get outputLatency(): number {
+		return 0.016
 	}
 }

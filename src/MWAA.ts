@@ -1,8 +1,10 @@
 import {log} from './utils/log'
+import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 
 type ModuleName =
+| 'AudioContext'
 | 'AudioNode'
 | 'BaseAudioContext'
 
@@ -13,6 +15,7 @@ export class MWAA {
 			throw new Error('[MWAA] already using mocked version of Web Audio API')
 		}
 
+		MWAA._mock('AudioContext', MockAudioContext as unknown as AudioContext, MWAA._originalAudioContext)
 		MWAA._mock('AudioNode', MockAudioNode as unknown as AudioNode, MWAA._originalAudioNode)
 		MWAA._mock('BaseAudioContext', MockBaseAudioContext as unknown as BaseAudioContext, MWAA._originalBaseAudioContext)
 
@@ -26,6 +29,7 @@ export class MWAA {
 			throw new Error('[MWAA] already using the original version of Web Audio API')
 		}
 
+		MWAA._unmock('AudioContext', MWAA._originalAudioContext)
 		MWAA._unmock('AudioNode', MWAA._originalAudioNode)
 		MWAA._unmock('BaseAudioContext', MWAA._originalBaseAudioContext)
 
@@ -35,6 +39,7 @@ export class MWAA {
 	}
 
 	private static _isMocked: boolean = false
+	private static _originalAudioContext: AudioContext
 	private static _originalAudioNode: AudioNode
 	private static _originalBaseAudioContext: BaseAudioContext
 
