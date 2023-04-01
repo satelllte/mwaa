@@ -1,7 +1,9 @@
 import {log} from './utils/log'
+import {MockAudioNode} from './MockAudioNode'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 
 type ModuleName =
+| 'AudioNode'
 | 'BaseAudioContext'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,6 +13,7 @@ export class MWAA {
 			throw new Error('[MWAA] already using mocked version of Web Audio API')
 		}
 
+		MWAA._mock('AudioNode', MockAudioNode as unknown as AudioNode, MWAA._originalAudioNode)
 		MWAA._mock('BaseAudioContext', MockBaseAudioContext as unknown as BaseAudioContext, MWAA._originalBaseAudioContext)
 
 		MWAA._isMocked = true
@@ -23,6 +26,7 @@ export class MWAA {
 			throw new Error('[MWAA] already using the original version of Web Audio API')
 		}
 
+		MWAA._unmock('AudioNode', MWAA._originalAudioNode)
 		MWAA._unmock('BaseAudioContext', MWAA._originalBaseAudioContext)
 
 		MWAA._isMocked = false
@@ -31,6 +35,7 @@ export class MWAA {
 	}
 
 	private static _isMocked: boolean = false
+	private static _originalAudioNode: AudioNode
 	private static _originalBaseAudioContext: BaseAudioContext
 
 	private static _mock<T>(
