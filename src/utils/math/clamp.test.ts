@@ -13,4 +13,8 @@ describe('clamp', () => {
 	it('returns max if value is more than it', () => {
 		expect(clamp(11, 0, 10)).toEqual(10)
 	})
+
+	it('throws if min > max', () => {
+		expect(() => clamp(0, 1, -1)).toThrowErrorMatchingInlineSnapshot('"min cannot be more than max, but received min: 1, max: -1"')
+	})
 })
