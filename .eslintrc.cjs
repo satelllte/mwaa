@@ -45,6 +45,9 @@ module.exports = {
 					variableDeclaration: true,
 					variableDeclarationIgnoreFunction: true,
 				}],
+
+				// Allows extraneous empty or static classes
+				'@typescript-eslint/no-extraneous-class': 'off',
 			},
 		},
 	],

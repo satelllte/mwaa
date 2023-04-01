@@ -4,7 +4,7 @@ import {MockBaseAudioContext} from './MockBaseAudioContext'
 type ModuleName =
 | 'BaseAudioContext'
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-extraneous-class
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export class MWAA {
 	public static mock(): void {
 		if (MWAA._isMocked) {

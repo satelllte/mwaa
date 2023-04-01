@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class MockBaseAudioContext implements Omit<BaseAudioContext,
 | 'addEventListener'
 | 'removeEventListener'
