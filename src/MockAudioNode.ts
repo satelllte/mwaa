@@ -11,7 +11,7 @@ export class MockAudioNode implements Omit<AudioNode,
 | 'removeEventListener'
 | 'dispatchEvent'
 > {
-	constructor() {
+	protected constructor() {
 		throw new TypeError('Illegal constructor')
 	}
 }
