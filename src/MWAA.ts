@@ -1,4 +1,3 @@
-import {log} from './utils/log'
 import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
@@ -23,8 +22,6 @@ export class MWAA {
 		MWAA._mock('GainNode', MockGainNode as unknown as GainNode, MWAA._originalGainNode)
 
 		MWAA._isMocked = true
-
-		log('using mocked version of Web Audio API')
 	}
 
 	public static unmock(): void {
@@ -38,8 +35,6 @@ export class MWAA {
 		MWAA._unmock('GainNode', MWAA._originalGainNode)
 
 		MWAA._isMocked = false
-
-		log('back to the original version of Web Audio API')
 	}
 
 	private static _isMocked: boolean = false
