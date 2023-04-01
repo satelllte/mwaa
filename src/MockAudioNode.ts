@@ -2,7 +2,6 @@ export class MockAudioNode implements Omit<AudioNode,
 | 'channelCount'
 | 'channelCountMode'
 | 'channelInterpretation'
-| 'context'
 | 'numberOfInputs'
 | 'numberOfOutputs'
 | 'connect'
@@ -11,7 +10,17 @@ export class MockAudioNode implements Omit<AudioNode,
 | 'removeEventListener'
 | 'dispatchEvent'
 > {
-	protected constructor() {
-		throw new TypeError('Illegal constructor')
+	public get context(): BaseAudioContext {
+		return this._context
+	}
+
+	private _context: BaseAudioContext
+
+	protected constructor(context: BaseAudioContext) {
+		if (new.target === MockAudioNode) {
+			throw new TypeError('Illegal constructor')
+		}
+
+		this._context = context
 	}
 }

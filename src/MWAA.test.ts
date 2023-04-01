@@ -2,6 +2,7 @@ import {describe, expect, it} from 'vitest'
 import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
+import {MockGainNode} from './MockGainNode'
 import {MWAA} from './MWAA'
 
 describe('MWAA', () => {
@@ -34,6 +35,7 @@ const confirmWebAudioApiUndefined = (): void => {
 	expect(globalThis.AudioContext).toBeUndefined()
 	expect(globalThis.AudioNode).toBeUndefined()
 	expect(globalThis.BaseAudioContext).toBeUndefined()
+	expect(globalThis.GainNode).toBeUndefined()
 }
 
 const confirmWebAudioApiDefined = (): void => {
@@ -43,4 +45,6 @@ const confirmWebAudioApiDefined = (): void => {
 	expect(globalThis.AudioNode).toEqual(MockAudioNode)
 	expect(globalThis.BaseAudioContext).toBeDefined()
 	expect(globalThis.BaseAudioContext).toEqual(MockBaseAudioContext)
+	expect(globalThis.GainNode).toBeDefined()
+	expect(globalThis.GainNode).toEqual(MockGainNode)
 }
