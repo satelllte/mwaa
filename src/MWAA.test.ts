@@ -32,19 +32,24 @@ describe('MWAA', () => {
 })
 
 const confirmWebAudioApiUndefined = (): void => {
-	expect(globalThis.AudioContext).toBeUndefined()
-	expect(globalThis.AudioNode).toBeUndefined()
-	expect(globalThis.BaseAudioContext).toBeUndefined()
-	expect(globalThis.GainNode).toBeUndefined()
+	const confirm = (globalThisObject: unknown): void => {
+		expect(globalThisObject).toBeUndefined()
+	}
+
+	confirm(globalThis.AudioContext)
+	confirm(globalThis.AudioNode)
+	confirm(globalThis.BaseAudioContext)
+	confirm(globalThis.GainNode)
 }
 
 const confirmWebAudioApiDefined = (): void => {
-	expect(globalThis.AudioContext).toBeDefined()
-	expect(globalThis.AudioContext).toEqual(MockAudioContext)
-	expect(globalThis.AudioNode).toBeDefined()
-	expect(globalThis.AudioNode).toEqual(MockAudioNode)
-	expect(globalThis.BaseAudioContext).toBeDefined()
-	expect(globalThis.BaseAudioContext).toEqual(MockBaseAudioContext)
-	expect(globalThis.GainNode).toBeDefined()
-	expect(globalThis.GainNode).toEqual(MockGainNode)
+	const confirm = (globalThisObject: unknown, mock: unknown): void => {
+		expect(globalThisObject).toBeDefined()
+		expect(globalThisObject).toEqual(mock)
+	}
+
+	confirm(globalThis.AudioContext, MockAudioContext)
+	confirm(globalThis.AudioNode, MockAudioNode)
+	confirm(globalThis.BaseAudioContext, MockBaseAudioContext)
+	confirm(globalThis.GainNode, MockGainNode)
 }
