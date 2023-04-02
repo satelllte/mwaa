@@ -43,4 +43,35 @@ describe('MockGainNode', () => {
 		expect(gainNode.numberOfInputs).toEqual(1)
 		expect(gainNode.numberOfOutputs).toEqual(1)
 	})
+
+	it('has correct channelCount', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelCount).toEqual(2)
+	})
+
+	it('allows to update channelCount', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelCount).toEqual(2)
+		gainNode.channelCount = 8
+		expect(gainNode.channelCount).toEqual(8)
+	})
+
+	it('throws error if trying to set wrong channelCount', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelCount).toEqual(2)
+		expect(() => {
+			gainNode.channelCount = 0
+		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (0) is outside the range [1, 32]"')
+		expect(() => {
+			gainNode.channelCount = 33
+		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (33) is outside the range [1, 32]"')
+		expect(() => {
+			// @ts-expect-error testing input with wrong type
+			gainNode.channelCount = 'x'
+		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (x) is outside the range [1, 32]"')
+		expect(gainNode.channelCount).toEqual(2)
+	})
 })
