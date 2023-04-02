@@ -19,6 +19,11 @@ describe('MockGainNode', () => {
 		expect(GainNode).toEqual(MockGainNode)
 	})
 
+	it('throws error if context argument is wrong', () => {
+		// @ts-expect-error testing error handling
+		expect(() => new GainNode('WRONG')).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': parameter 1 is not of type \'BaseAudioContext\'"')
+	})
+
 	it('initializes an instance of GainNode which extends AudioNode', () => {
 		const ctx: AudioContext = new AudioContext()
 		const gainNode: GainNode = new GainNode(ctx)
@@ -30,5 +35,12 @@ describe('MockGainNode', () => {
 		const ctx: AudioContext = new AudioContext()
 		const gainNode: GainNode = new GainNode(ctx)
 		expect(gainNode.context).toEqual(ctx)
+	})
+
+	it('has correct numberOfInputs & numberOfOutputs', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.numberOfInputs).toEqual(1)
+		expect(gainNode.numberOfOutputs).toEqual(1)
 	})
 })

@@ -9,14 +9,16 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 | 'channelCount'
 | 'channelCountMode'
 | 'channelInterpretation'
-| 'numberOfInputs'
-| 'numberOfOutputs'
 | 'connect'
 | 'disconnect'
 // GainNode
 | 'gain'
 > {
 	constructor(context: BaseAudioContext, options?: GainOptions) {
-		super(context)
+		super({
+			context,
+			numberOfInputs: 1,
+			numberOfOutputs: 1,
+		})
 	}
 }
