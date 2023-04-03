@@ -138,4 +138,51 @@ describe('MockGainNode', () => {
 		expect(gainNode.channelCountMode).toEqual('max')
 		consoleWarnSpy.mockRestore()
 	})
+
+	/**
+	 * Tests for: channelInterpretation
+	 */
+
+	it('has correct channelInterpretation by default', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelInterpretation).toEqual('speakers')
+	})
+
+	it('has correct channelInterpretation from constructor', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx, {channelInterpretation: 'discrete'})
+		expect(gainNode.channelInterpretation).toEqual('discrete')
+	})
+
+	it('throws error if channelInterpretation from constructor is wrong', () => {
+		const ctx: AudioContext = new AudioContext()
+		expect(() =>
+			// @ts-expect-error bad input test
+			new GainNode(ctx, {channelInterpretation: 'discr'}),
+		).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': Failed to read the \'channelInterpretation\' property from \'AudioNodeOptions\': The provided value \'discr\' is not a valid enum value of type ChannelInterpretation."')
+	})
+
+	it('allows to update channelInterpretation', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelInterpretation).toEqual('speakers')
+		gainNode.channelInterpretation = 'discrete'
+		expect(gainNode.channelInterpretation).toEqual('discrete')
+	})
+
+	it('does not do anything but logs warning when trying to update to wrong channelInterpretation', () => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const consoleWarnSpy: SpyInstance = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
+		expect(gainNode.channelInterpretation).toEqual('speakers')
+		// @ts-expect-error bad input testing
+		gainNode.channelInterpretation = 'bad'
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'bad\' is not a valid enum value of type ChannelInterpretation.')
+		expect(gainNode.channelInterpretation).toEqual('speakers')
+		consoleWarnSpy.mockRestore()
+	})
 })

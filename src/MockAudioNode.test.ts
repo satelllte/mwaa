@@ -218,4 +218,81 @@ describe('MockAudioNode', () => {
 		expect(node.channelCountMode).toEqual('max')
 		consoleWarnSpy.mockRestore()
 	})
+
+	/**
+	 * Tests for: channelInterpretation
+	 */
+
+	it('sets channelInterpretation to "speakers" by default for inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelInterpretation).toEqual('speakers')
+	})
+
+	it('sets channelInterpretation to the specified initial value of inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+					channelInterpretation: 'discrete',
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelInterpretation).toEqual('discrete')
+	})
+
+	it('throws error when inherited node has wrong channelInterpretation initially', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+					// @ts-expect-error bad input test
+					channelInterpretation: 'discrette',
+				})
+			}
+		}
+		expect(() => new MockTestNode()).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'TestNode\': Failed to read the \'channelInterpretation\' property from \'AudioNodeOptions\': The provided value \'discrette\' is not a valid enum value of type ChannelInterpretation."')
+	})
+
+	it('updates channelInterpretation for inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelInterpretation).toEqual('speakers')
+		node.channelInterpretation = 'discrete'
+		expect(node.channelInterpretation).toEqual('discrete')
+	})
+
+	it('does not do anything but logs warning when inherited node tries to set wrong channelInterpretation', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+				})
+			}
+		}
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const consoleWarnSpy: SpyInstance = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
+		const node: MockTestNode = new MockTestNode()
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
+		expect(node.channelInterpretation).toEqual('speakers')
+		// @ts-expect-error bad input testing
+		node.channelInterpretation = 'discrettte'
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'discrettte\' is not a valid enum value of type ChannelInterpretation.')
+		expect(node.channelInterpretation).toEqual('speakers')
+		consoleWarnSpy.mockRestore()
+	})
 })

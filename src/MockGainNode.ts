@@ -6,7 +6,6 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 | 'removeEventListener'
 | 'dispatchEvent'
 // AudioNode
-| 'channelInterpretation'
 | 'connect'
 | 'disconnect'
 // GainNode

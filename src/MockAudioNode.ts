@@ -5,7 +5,6 @@ type MockAudioNodeOptions = AudioNodeOptions & {
 }
 
 export class MockAudioNode implements Omit<AudioNode,
-| 'channelInterpretation'
 | 'connect'
 | 'disconnect'
 | 'addEventListener'
@@ -50,12 +49,31 @@ export class MockAudioNode implements Omit<AudioNode,
 		this._channelCountMode = channelCountMode
 	}
 
+	public get channelInterpretation(): ChannelInterpretation {
+		return this._channelInterpretation
+	}
+
+	public set channelInterpretation(channelInterpretation: ChannelInterpretation) {
+		if (!MockAudioNode._isValidChannelInterpretation(channelInterpretation)) {
+			// No error throw this time, but just a warning
+			console.warn(MockAudioNode._getChannelInterpretationErrorMessage(channelInterpretation))
+			return
+		}
+
+		this._channelInterpretation = channelInterpretation
+	}
+
+	private static _numberOfInputsDefault: number = 1
 	private static _numberOfInputsMin: number = 0
 	private static _numberOfInputsMax: number = 6
+	private static _numberOfOutputsDefault: number = 1
 	private static _numberOfOutputsMin: number = 0
 	private static _numberOfOutputsMax: number = 6
+	private static _channelCountDefault: number = 2
 	private static _channelCountMin: number = 1
 	private static _channelCountMax: number = 32
+	private static _channelCountModeDefault: ChannelCountMode = 'max'
+	private static _channelInterpretationDefault: ChannelInterpretation = 'speakers'
 
 	private static _isValidChannelCount(channelCount: number): boolean {
 		return !Number.isNaN(Number(channelCount)) && channelCount >= MockAudioNode._channelCountMin && channelCount <= MockAudioNode._channelCountMax
@@ -63,6 +81,10 @@ export class MockAudioNode implements Omit<AudioNode,
 
 	private static _isValidChannelCountMode(channelCountMode: ChannelCountMode): boolean {
 		return channelCountMode === 'clamped-max' || channelCountMode === 'explicit' || channelCountMode === 'max'
+	}
+
+	private static _isValidChannelInterpretation(channelInterpretation: ChannelInterpretation): boolean {
+		return channelInterpretation === 'discrete' || channelInterpretation === 'speakers'
 	}
 
 	private static _getChannelCountErrorMessage(channelCount: number): string {
@@ -73,20 +95,24 @@ export class MockAudioNode implements Omit<AudioNode,
 		return `The provided value '${channelCountMode}' is not a valid enum value of type ChannelCountMode.`
 	}
 
+	private static _getChannelInterpretationErrorMessage(channelInterpretation: ChannelInterpretation): string {
+		return `The provided value '${channelInterpretation}' is not a valid enum value of type ChannelInterpretation.`
+	}
+
 	private _context: BaseAudioContext
 	private _numberOfInputs: number
 	private _numberOfOutputs: number
 	private _channelCount: number
 	private _channelCountMode: ChannelCountMode
+	private _channelInterpretation: ChannelInterpretation
 
 	protected constructor(options?: MockAudioNodeOptions) {
 		const context: BaseAudioContext | undefined = options?.context
-		const numberOfInputs: number = options?.numberOfInputs ?? 1
-		const numberOfOutputs: number = options?.numberOfOutputs ?? 1
-		const channelCount: number = options?.channelCount ?? 2
-		const channelCountMode: ChannelCountMode = options?.channelCountMode ?? 'max'
-		// eslint-disable-next-line no-warning-comments
-		// TODO: "channelInterpretation" with default value "speakers"
+		const numberOfInputs: number = options?.numberOfInputs ?? MockAudioNode._numberOfInputsDefault
+		const numberOfOutputs: number = options?.numberOfOutputs ?? MockAudioNode._numberOfOutputsDefault
+		const channelCount: number = options?.channelCount ?? MockAudioNode._channelCountDefault
+		const channelCountMode: ChannelCountMode = options?.channelCountMode ?? MockAudioNode._channelCountModeDefault
+		const channelInterpretation: ChannelInterpretation = options?.channelInterpretation ?? MockAudioNode._channelInterpretationDefault
 
 		if (new.target === MockAudioNode) {
 			throw new TypeError('Illegal constructor')
@@ -115,10 +141,15 @@ export class MockAudioNode implements Omit<AudioNode,
 			throw new TypeError(`Failed to construct '${targetName}': Failed to read the 'channelCountMode' property from 'AudioNodeOptions': ${MockAudioNode._getChannelCountModeErrorMessage(channelCountMode)}`)
 		}
 
+		if (!MockAudioNode._isValidChannelInterpretation(channelInterpretation)) {
+			throw new TypeError(`Failed to construct '${targetName}': Failed to read the 'channelInterpretation' property from 'AudioNodeOptions': ${MockAudioNode._getChannelInterpretationErrorMessage(channelInterpretation)}`)
+		}
+
 		this._context = context
 		this._numberOfInputs = numberOfInputs
 		this._numberOfOutputs = numberOfOutputs
 		this._channelCount = channelCount
 		this._channelCountMode = channelCountMode
+		this._channelInterpretation = channelInterpretation
 	}
 }
