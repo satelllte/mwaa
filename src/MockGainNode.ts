@@ -6,19 +6,26 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 | 'removeEventListener'
 | 'dispatchEvent'
 // AudioNode
-| 'channelCount'
-| 'channelCountMode'
 | 'channelInterpretation'
 | 'connect'
 | 'disconnect'
 // GainNode
 | 'gain'
 > {
-	constructor(context: BaseAudioContext, options?: GainOptions) {
+	constructor(context: BaseAudioContext, options: GainOptions = {}) {
+		const {
+			channelCount,
+			channelCountMode,
+			channelInterpretation,
+			// eslint-disable-next-line no-warning-comments
+			gain, // TODO: implement
+		}: GainOptions = options
+
 		super({
 			context,
-			numberOfInputs: 1,
-			numberOfOutputs: 1,
+			channelCount,
+			channelCountMode,
+			channelInterpretation,
 		})
 	}
 }

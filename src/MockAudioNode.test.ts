@@ -1,4 +1,4 @@
-import {afterAll, beforeAll, describe, expect, it} from 'vitest'
+import {type SpyInstance, afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
 import {MWAA} from './MWAA'
 import {MockAudioNode} from './MockAudioNode'
 
@@ -80,6 +80,19 @@ describe('MockAudioNode', () => {
 		expect(node.channelCount).toEqual(2)
 	})
 
+	it('sets channelCount to the specified initial value of inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+					channelCount: 5,
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelCount).toEqual(5)
+	})
+
 	it('throws error when inherited node has wrong channelCount initially', () => {
 		class MockTestNode extends MockAudioNode {
 			constructor() {
@@ -127,5 +140,82 @@ describe('MockAudioNode', () => {
 			node.channelCount = 'x'
 		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (x) is outside the range [1, 32]"')
 		expect(node.channelCount).toEqual(2)
+	})
+
+	/**
+	 * Tests for: channelCountMode
+	 */
+
+	it('sets channelCountMode to "max" by default for inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelCountMode).toEqual('max')
+	})
+
+	it('sets channelCountMode to the specified initial value of inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+					channelCountMode: 'explicit',
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelCountMode).toEqual('explicit')
+	})
+
+	it('throws error when inherited node has wrong channelCountMode initially', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+					// @ts-expect-error bad input test
+					channelCountMode: 'clamped-maxxxxx',
+				})
+			}
+		}
+		expect(() => new MockTestNode()).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'TestNode\': Failed to read the \'channelCountMode\' property from \'AudioNodeOptions\': The provided value \'clamped-maxxxxx\' is not a valid enum value of type ChannelCountMode."')
+	})
+
+	it('updates channelCountMode for inherited node', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+				})
+			}
+		}
+		const node: MockTestNode = new MockTestNode()
+		expect(node.channelCountMode).toEqual('max')
+		node.channelCountMode = 'clamped-max'
+		expect(node.channelCountMode).toEqual('clamped-max')
+	})
+
+	it('does not do anything but logs warning when inherited node tries to set wrong channelCountMode', () => {
+		class MockTestNode extends MockAudioNode {
+			constructor() {
+				super({
+					context: new AudioContext(),
+				})
+			}
+		}
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const consoleWarnSpy: SpyInstance = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
+		const node: MockTestNode = new MockTestNode()
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
+		expect(node.channelCountMode).toEqual('max')
+		// @ts-expect-error bad input testing
+		node.channelCountMode = 'explicitt'
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'explicitt\' is not a valid enum value of type ChannelCountMode.')
+		expect(node.channelCountMode).toEqual('max')
+		consoleWarnSpy.mockRestore()
 	})
 })

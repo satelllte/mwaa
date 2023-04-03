@@ -1,4 +1,4 @@
-import {afterAll, beforeAll, describe, expect, it} from 'vitest'
+import {type SpyInstance, afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
 import {MWAA} from './MWAA'
 import {MockGainNode} from './MockGainNode'
 
@@ -44,10 +44,27 @@ describe('MockGainNode', () => {
 		expect(gainNode.numberOfOutputs).toEqual(1)
 	})
 
-	it('has correct channelCount', () => {
+	/**
+	 * Tests for: channelCount
+	 */
+
+	it('has correct channelCount by default', () => {
 		const ctx: AudioContext = new AudioContext()
 		const gainNode: GainNode = new GainNode(ctx)
 		expect(gainNode.channelCount).toEqual(2)
+	})
+
+	it('has correct channelCount from constructor', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx, {channelCount: 4})
+		expect(gainNode.channelCount).toEqual(4)
+	})
+
+	it('throws error if channelCount from constructor is wrong', () => {
+		const ctx: AudioContext = new AudioContext()
+		expect(() =>
+			new GainNode(ctx, {channelCount: 0}),
+		).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': The channel count provided (0) is outside the range [1, 32]"')
 	})
 
 	it('allows to update channelCount', () => {
@@ -73,5 +90,52 @@ describe('MockGainNode', () => {
 			gainNode.channelCount = 'x'
 		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (x) is outside the range [1, 32]"')
 		expect(gainNode.channelCount).toEqual(2)
+	})
+
+	/**
+	 * Tests for: channelCountMode
+	 */
+
+	it('has correct channelCountMode by default', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelCountMode).toEqual('max')
+	})
+
+	it('has correct channelCountMode from constructor', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx, {channelCountMode: 'clamped-max'})
+		expect(gainNode.channelCountMode).toEqual('clamped-max')
+	})
+
+	it('throws error if channelCountMode from constructor is wrong', () => {
+		const ctx: AudioContext = new AudioContext()
+		expect(() =>
+			// @ts-expect-error bad input test
+			new GainNode(ctx, {channelCountMode: 'clamped-maxx'}),
+		).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': Failed to read the \'channelCountMode\' property from \'AudioNodeOptions\': The provided value \'clamped-maxx\' is not a valid enum value of type ChannelCountMode."')
+	})
+
+	it('allows to update channelCountMode', () => {
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(gainNode.channelCountMode).toEqual('max')
+		gainNode.channelCountMode = 'explicit'
+		expect(gainNode.channelCountMode).toEqual('explicit')
+	})
+
+	it('does not do anything but logs warning when trying to update to wrong channelCountMode', () => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const consoleWarnSpy: SpyInstance = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
+		const ctx: AudioContext = new AudioContext()
+		const gainNode: GainNode = new GainNode(ctx)
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
+		expect(gainNode.channelCountMode).toEqual('max')
+		// @ts-expect-error bad input testing
+		gainNode.channelCountMode = 'explicitt'
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'explicitt\' is not a valid enum value of type ChannelCountMode.')
+		expect(gainNode.channelCountMode).toEqual('max')
+		consoleWarnSpy.mockRestore()
 	})
 })
