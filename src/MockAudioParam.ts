@@ -101,7 +101,7 @@ export class MockAudioParam implements Omit<AudioParam,
 		this.minValue = minValue
 		this.maxValue = maxValue
 		this._value = value
-		this.value = value // This will clamp the value & log warning
+		this.value = value // This will clamp the value & log warning (if that's the case)
 	}
 
 	private _isValueInRange(value: number): boolean {
