@@ -41,7 +41,7 @@ export class MockAudioParam implements Omit<AudioParam,
 		}
 
 		if (!this._isValueInRange(value)) {
-			console.warn(`value ${value} outside nominal range [-${this.minValue}, ${this.maxValue}]; value will be clamped`)
+			console.warn(`value ${value} outside nominal range [${this.minValue}, ${this.maxValue}]; value will be clamped`)
 			this._value = clamp(value, this.minValue, this.maxValue)
 			return
 		}

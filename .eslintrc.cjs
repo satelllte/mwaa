@@ -55,6 +55,9 @@ module.exports = {
 
 				// Allows up to 10 nested callbacks
 				'max-nested-callbacks': ['error', 10],
+
+				// Allows useless constructors
+				'@typescript-eslint/no-useless-constructor': 'off',
 			},
 		},
 	],

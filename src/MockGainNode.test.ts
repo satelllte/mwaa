@@ -237,7 +237,7 @@ describe('MockGainNode', () => {
 				expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
 				const gainNode: GainNode = new GainNode(ctx, {gain: -3.4028234663852886e+38 - 1e38})
 				expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
-				expect(consoleWarnSpy).toHaveBeenCalledWith('value -4.4028234663852884e+38 outside nominal range [--3.4028234663852886e+38, 3.4028234663852886e+38]; value will be clamped')
+				expect(consoleWarnSpy).toHaveBeenCalledWith('value -4.4028234663852884e+38 outside nominal range [-3.4028234663852886e+38, 3.4028234663852886e+38]; value will be clamped')
 				expect(gainNode.gain.value).toEqual(-3.4028234663852886e+38)
 			})
 
@@ -264,7 +264,7 @@ describe('MockGainNode', () => {
 				expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
 				gainNode.gain.value = -3.4028234663852886e+38 - 1e38
 				expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
-				expect(consoleWarnSpy).toHaveBeenCalledWith('value -4.4028234663852884e+38 outside nominal range [--3.4028234663852886e+38, 3.4028234663852886e+38]; value will be clamped')
+				expect(consoleWarnSpy).toHaveBeenCalledWith('value -4.4028234663852884e+38 outside nominal range [-3.4028234663852886e+38, 3.4028234663852886e+38]; value will be clamped')
 				expect(gainNode.gain.value).toEqual(-3.4028234663852886e+38)
 			})
 
