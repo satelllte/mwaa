@@ -1,11 +1,13 @@
 import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
+import {MockAudioParam} from './MockAudioParam'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 import {MockGainNode} from './MockGainNode'
 
 type ModuleName =
 | 'AudioContext'
 | 'AudioNode'
+| 'AudioParam'
 | 'BaseAudioContext'
 | 'GainNode'
 
@@ -18,6 +20,7 @@ export class MWAA {
 
 		MWAA._mock('AudioContext', MockAudioContext as unknown as AudioContext, MWAA._originalAudioContext)
 		MWAA._mock('AudioNode', MockAudioNode as unknown as AudioNode, MWAA._originalAudioNode)
+		MWAA._mock('AudioParam', MockAudioParam as unknown as AudioParam, MWAA._originalAudioParam)
 		MWAA._mock('BaseAudioContext', MockBaseAudioContext as unknown as BaseAudioContext, MWAA._originalBaseAudioContext)
 		MWAA._mock('GainNode', MockGainNode as unknown as GainNode, MWAA._originalGainNode)
 
@@ -31,6 +34,7 @@ export class MWAA {
 
 		MWAA._unmock('AudioContext', MWAA._originalAudioContext)
 		MWAA._unmock('AudioNode', MWAA._originalAudioNode)
+		MWAA._unmock('AudioParam', MWAA._originalAudioParam)
 		MWAA._unmock('BaseAudioContext', MWAA._originalBaseAudioContext)
 		MWAA._unmock('GainNode', MWAA._originalGainNode)
 
@@ -40,6 +44,7 @@ export class MWAA {
 	private static _isMocked: boolean = false
 	private static _originalAudioContext: AudioContext
 	private static _originalAudioNode: AudioNode
+	private static _originalAudioParam: AudioParam
 	private static _originalBaseAudioContext: BaseAudioContext
 	private static _originalGainNode: GainNode
 

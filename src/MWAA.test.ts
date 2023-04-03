@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest'
 import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
+import {MockAudioParam} from './MockAudioParam'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 import {MockGainNode} from './MockGainNode'
 import {MWAA} from './MWAA'
@@ -38,6 +39,7 @@ const confirmWebAudioApiUndefined = (): void => {
 
 	confirm(globalThis.AudioContext)
 	confirm(globalThis.AudioNode)
+	confirm(globalThis.AudioParam)
 	confirm(globalThis.BaseAudioContext)
 	confirm(globalThis.GainNode)
 }
@@ -50,6 +52,7 @@ const confirmWebAudioApiDefined = (): void => {
 
 	confirm(globalThis.AudioContext, MockAudioContext)
 	confirm(globalThis.AudioNode, MockAudioNode)
+	confirm(globalThis.AudioParam, MockAudioParam)
 	confirm(globalThis.BaseAudioContext, MockBaseAudioContext)
 	confirm(globalThis.GainNode, MockGainNode)
 }
