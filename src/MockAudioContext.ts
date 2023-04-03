@@ -43,14 +43,6 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 | 'resume'
 | 'suspend'
 > {
-	public get baseLatency(): number {
-		return this._baseLatency
-	}
-
-	public get outputLatency(): number {
-		return this._outputLatency
-	}
-
 	private static _defaultLatencyHint: AudioContextLatencyCategory | number = 'interactive'
 	private static _baseLatencyMin: number = 0.0001
 	private static _baseLatencyMax: number = 0.5000
@@ -108,8 +100,8 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 		return MockAudioContext._outputLatencyForInteractiveHint
 	}
 
-	private _baseLatency: number
-	private _outputLatency: number
+	public readonly baseLatency: number
+	public readonly outputLatency: number
 
 	constructor(options?: AudioContextOptions) {
 		super(options?.sampleRate)
@@ -117,7 +109,7 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 		const latencyHint: LatencyHint = options?.latencyHint ?? MockAudioContext._defaultLatencyHint
 		MockAudioContext._validateLatencyHint(latencyHint)
 
-		this._baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
-		this._outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
+		this.baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
+		this.outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
 	}
 }
