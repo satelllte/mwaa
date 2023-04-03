@@ -1,4 +1,17 @@
 import {MockAudioNode} from './MockAudioNode'
+import {MockAudioParam} from './MockAudioParam'
+
+class MockGainAudioParam extends MockAudioParam {
+	constructor(gain?: number) {
+		super({
+			automationRate: 'a-rate',
+			defaultValue: 1,
+			minValue: -3.4028234663852886e+38,
+			maxValue: +3.4028234663852886e+38,
+			value: gain,
+		})
+	}
+}
 
 export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 // EventTarget
@@ -9,15 +22,16 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 | 'connect'
 | 'disconnect'
 // GainNode
-| 'gain'
+| 'gain' // To be deleted once MockAudioParam implements everything from AudioParam
 > {
+	public readonly gain: MockAudioParam
+
 	constructor(context: BaseAudioContext, options: GainOptions = {}) {
 		const {
 			channelCount,
 			channelCountMode,
 			channelInterpretation,
-			// eslint-disable-next-line no-warning-comments
-			gain, // TODO: implement
+			gain,
 		}: GainOptions = options
 
 		super({
@@ -26,5 +40,7 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 			channelCountMode,
 			channelInterpretation,
 		})
+
+		this.gain = new MockGainAudioParam(gain)
 	}
 }

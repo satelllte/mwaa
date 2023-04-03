@@ -1,8 +1,11 @@
-import {type SpyInstance, afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
+import {type SpyInstance, afterAll, beforeAll, describe, expect, it} from 'vitest'
+import {useConsoleWarnSpy} from './utils/testing/useConsoleWarnSpy'
 import {MWAA} from './MWAA'
 import {MockAudioNode} from './MockAudioNode'
 
 describe('MockAudioNode', () => {
+	const consoleWarnSpy: SpyInstance = useConsoleWarnSpy()
+
 	beforeAll(() => {
 		MWAA.mock()
 	})
@@ -206,8 +209,6 @@ describe('MockAudioNode', () => {
 				})
 			}
 		}
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const consoleWarnSpy: SpyInstance = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
 		const node: MockTestNode = new MockTestNode()
 		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
 		expect(node.channelCountMode).toEqual('max')
@@ -216,7 +217,6 @@ describe('MockAudioNode', () => {
 		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
 		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'explicitt\' is not a valid enum value of type ChannelCountMode.')
 		expect(node.channelCountMode).toEqual('max')
-		consoleWarnSpy.mockRestore()
 	})
 
 	/**
@@ -283,8 +283,6 @@ describe('MockAudioNode', () => {
 				})
 			}
 		}
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const consoleWarnSpy: SpyInstance = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
 		const node: MockTestNode = new MockTestNode()
 		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
 		expect(node.channelInterpretation).toEqual('speakers')
@@ -293,6 +291,5 @@ describe('MockAudioNode', () => {
 		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
 		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'discrettte\' is not a valid enum value of type ChannelInterpretation.')
 		expect(node.channelInterpretation).toEqual('speakers')
-		consoleWarnSpy.mockRestore()
 	})
 })

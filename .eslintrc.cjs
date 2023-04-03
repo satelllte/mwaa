@@ -48,6 +48,13 @@ module.exports = {
 
 				// Allows extraneous empty or static classes
 				'@typescript-eslint/no-extraneous-class': 'off',
+
+				// Allows empty functions
+				'no-empty-function': 'off',
+				'@typescript-eslint/no-empty-function': 'off',
+
+				// Allows up to 10 nested callbacks
+				'max-nested-callbacks': ['error', 10],
 			},
 		},
 	],
