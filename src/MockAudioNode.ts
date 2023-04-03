@@ -107,19 +107,19 @@ export class MockAudioNode implements Omit<AudioNode,
 	private _channelInterpretation: ChannelInterpretation
 
 	protected constructor(options?: MockAudioNodeOptions) {
-		const context: BaseAudioContext | undefined = options?.context
-		const numberOfInputs: number = options?.numberOfInputs ?? MockAudioNode._numberOfInputsDefault
-		const numberOfOutputs: number = options?.numberOfOutputs ?? MockAudioNode._numberOfOutputsDefault
-		const channelCount: number = options?.channelCount ?? MockAudioNode._channelCountDefault
-		const channelCountMode: ChannelCountMode = options?.channelCountMode ?? MockAudioNode._channelCountModeDefault
-		const channelInterpretation: ChannelInterpretation = options?.channelInterpretation ?? MockAudioNode._channelInterpretationDefault
-
 		if (new.target === MockAudioNode) {
 			throw new TypeError('Illegal constructor')
 		}
 
 		const mockTargetName: string = new.target.name
 		const targetName: string = mockTargetName.replace('Mock', '')
+
+		const context: BaseAudioContext | undefined = options?.context
+		const numberOfInputs: number = options?.numberOfInputs ?? MockAudioNode._numberOfInputsDefault
+		const numberOfOutputs: number = options?.numberOfOutputs ?? MockAudioNode._numberOfOutputsDefault
+		const channelCount: number = options?.channelCount ?? MockAudioNode._channelCountDefault
+		const channelCountMode: ChannelCountMode = options?.channelCountMode ?? MockAudioNode._channelCountModeDefault
+		const channelInterpretation: ChannelInterpretation = options?.channelInterpretation ?? MockAudioNode._channelInterpretationDefault
 
 		if (!(context instanceof BaseAudioContext)) {
 			throw new TypeError(`Failed to construct '${targetName}': parameter 1 is not of type 'BaseAudioContext'`)
