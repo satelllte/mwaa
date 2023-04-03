@@ -30,15 +30,11 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 | 'createWaveShaper'
 | 'decodeAudioData'
 > {
-	public get sampleRate(): number {
-		return this._sampleRate
-	}
-
 	private static _sampleRateDefault: number = 44100
 	private static _sampleRateMin: number = 3000 // https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/platform/audio/AudioUtilities.cpp -> minAudioBufferSampleRate
 	private static _sampleRateMax: number = 192000 // https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/platform/audio/AudioUtilities.cpp -> maxAudioBufferSampleRate
 
-	protected _sampleRate: number = MockBaseAudioContext._sampleRateDefault
+	public readonly sampleRate: number = MockBaseAudioContext._sampleRateDefault
 
 	protected constructor(sampleRate: number = MockBaseAudioContext._sampleRateDefault) {
 		if (new.target === MockBaseAudioContext) {
@@ -50,6 +46,6 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 			throw new DOMException(`Failed to construct '${targetName}': The sample rate provided (${sampleRate}) is outside the range [${MockBaseAudioContext._sampleRateMin}, ${MockBaseAudioContext._sampleRateMax}]`)
 		}
 
-		this._sampleRate = sampleRate
+		this.sampleRate = sampleRate
 	}
 }
