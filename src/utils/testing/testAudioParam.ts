@@ -103,8 +103,6 @@ export const testAudioParam = ({
 			it('clamps & logs warning if the value received from setter is out of range', () => {
 				const ctx: AudioContext = new AudioContext()
 				const {node, param}: CreatorFnResult = creator(ctx)
-				console.info(`${nodeName}.${paramName} | lessThanMinValue: `, lessThanMinValue)
-				console.info(`${nodeName}.${paramName} | moreThanMaxValue: `, moreThanMaxValue)
 				expect(param.value).toEqual(expectedValue)
 				expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
 				param.value = lessThanMinValue
