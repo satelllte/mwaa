@@ -28,6 +28,45 @@ describe('MockDelayNode', () => {
 		expect(delayNode).toBeInstanceOf(AudioNode)
 	})
 
+	describe('maxDelayTime', () => {
+		it('sets delayTime.maxValue from constructor', () => {
+			const ctx: AudioContext = new AudioContext()
+			const delayNode: DelayNode = new DelayNode(ctx, {maxDelayTime: 5})
+			expect(delayNode.delayTime.maxValue).toEqual(5)
+		})
+
+		it('allows to set delayTime value more than 1 from constructor', () => {
+			const ctx: AudioContext = new AudioContext()
+			const delayNode: DelayNode = new DelayNode(ctx, {maxDelayTime: 5, delayTime: 3})
+			expect(delayNode.delayTime.value).toEqual(3)
+			expect(delayNode.delayTime.maxValue).toEqual(5)
+		})
+
+		it('throws is non-finite value passed', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(() =>
+				new DelayNode(ctx, {maxDelayTime: Infinity}),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'DelayNode\': Failed to read the \'maxDelayTime\' property from \'DelayOptions\': The provided double value is non-finite."')
+			expect(() =>
+				// @ts-expect-error for testing
+				new DelayNode(ctx, {maxDelayTime: 'x'}),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'DelayNode\': Failed to read the \'maxDelayTime\' property from \'DelayOptions\': The provided double value is non-finite."')
+		})
+
+		it('throws if out of range value passed', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(() =>
+				new DelayNode(ctx, {maxDelayTime: -1}),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'DelayNode\': The max delay time provided (-1) is outside the range (0, 180)"')
+			expect(() =>
+				new DelayNode(ctx, {maxDelayTime: 0}),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'DelayNode\': The max delay time provided (0) is outside the range (0, 180)"')
+			expect(() =>
+				new DelayNode(ctx, {maxDelayTime: 180}),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'DelayNode\': The max delay time provided (180) is outside the range (0, 180)"')
+		})
+	})
+
 	testAudioNode({
 		nodeName: 'DelayNode',
 		numberOfInputs: 1,
