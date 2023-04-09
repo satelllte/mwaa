@@ -1,7 +1,7 @@
 import {type SpyInstance, describe, expect, it} from 'vitest'
 import {type AudioNodeName} from '../../types'
+import {rangePercent} from '../math/rangePercent'
 import {useConsoleWarnSpy} from './useConsoleWarnSpy'
-import { rangePercent } from '../math/rangePercent';
 
 type CreatorFnResult = {
 	node: AudioNode;
