@@ -25,6 +25,38 @@ describe('MockAudioContext', () => {
 		expect(ctx).toBeInstanceOf(BaseAudioContext)
 	})
 
+	describe('currentTime', () => {
+		it('equals to 0 by default', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(ctx.currentTime).toEqual(0)
+		})
+
+		it('cannot be modified directly', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(ctx.currentTime).toEqual(0)
+			// @ts-expect-error for testing
+			ctx.currentTime = 0.13
+			expect(ctx.currentTime).toEqual(0)
+		})
+	})
+
+	describe('state', () => {
+		// eslint-disable-next-line no-warning-comments
+		// TODO: in the future Autoplay policy behaviour can also be simulated: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy
+		it('equals to "running" by default', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(ctx.state).toEqual('running')
+		})
+
+		it('cannot be modified directly', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(ctx.state).toEqual('running')
+			// @ts-expect-error for testing
+			ctx.state = 'suspended'
+			expect(ctx.state).toEqual('running')
+		})
+	})
+
 	describe('sampleRate', () => {
 		it('equals to 44100 by default', () => {
 			const ctx: AudioContext = new AudioContext()
@@ -39,6 +71,14 @@ describe('MockAudioContext', () => {
 		it('throws error if custom value specified in constructor is out of device\'s range', () => {
 			expect(() => new AudioContext({sampleRate: 1})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1) is outside the range [3000, 192000]"')
 			expect(() => new AudioContext({sampleRate: 1000000})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1000000) is outside the range [3000, 192000]"')
+		})
+
+		it('cannot be modified directly', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(ctx.sampleRate).toEqual(44100)
+			// @ts-expect-error for testing
+			ctx.sampleRate = 96000
+			expect(ctx.sampleRate).toEqual(44100)
 		})
 	})
 
@@ -70,6 +110,18 @@ describe('MockAudioContext', () => {
 		it('throws error if latencyHint specified in construtor is wrong', () => {
 			// @ts-expect-error test for the latencyHint type check
 			expect(() => new AudioContext({latencyHint: 'XXX'})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': Failed to read the \'latencyHint\' property from \'AudioContextOptions\': The provided value XXX is not a valid enum value of type AudioContextLatencyCategory."')
+		})
+
+		it('cannot be modified directly', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(ctx.baseLatency).toEqual(0.005)
+			expect(ctx.outputLatency).toEqual(0.009)
+			// @ts-expect-error testing
+			ctx.baseLatency = 0.22
+			// @ts-expect-error testing
+			ctx.outputLatency = 0.33
+			expect(ctx.baseLatency).toEqual(0.005)
+			expect(ctx.outputLatency).toEqual(0.009)
 		})
 	})
 })

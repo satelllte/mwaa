@@ -10,11 +10,9 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 | 'dispatchEvent'
 // BaseAudioContext
 | 'audioWorklet'
-| 'currentTime'
 | 'destination'
 | 'listener'
 | 'onstatechange'
-| 'state'
 | 'createAnalyser'
 | 'createBiquadFilter'
 | 'createBuffer'
@@ -100,8 +98,20 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 		return MockAudioContext._outputLatencyForInteractiveHint
 	}
 
-	public readonly baseLatency: number
-	public readonly outputLatency: number
+	public get baseLatency(): number {
+		return this._baseLatency
+	}
+
+	private set baseLatency(baseLatency: number) {} // Prevents direct modifications
+
+	public get outputLatency(): number {
+		return this._outputLatency
+	}
+
+	private set outputLatency(outputLatency: number) {} // Prevents direct modifications
+
+	private _baseLatency: number
+	private _outputLatency: number
 
 	constructor(options?: AudioContextOptions) {
 		super(options?.sampleRate)
@@ -109,7 +119,7 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 		const latencyHint: LatencyHint = options?.latencyHint ?? MockAudioContext._defaultLatencyHint
 		MockAudioContext._validateLatencyHint(latencyHint)
 
-		this.baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
-		this.outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
+		this._baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
+		this._outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
 	}
 }
