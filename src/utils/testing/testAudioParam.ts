@@ -1,6 +1,7 @@
 import {type SpyInstance, describe, expect, it} from 'vitest'
 import {type AudioNodeName} from '../../types'
 import {useConsoleWarnSpy} from './useConsoleWarnSpy'
+import { rangePercent } from '../math/rangePercent';
 
 type CreatorFnResult = {
 	node: AudioNode;
@@ -31,9 +32,10 @@ export const testAudioParam = ({
 		const consoleWarnSpy: SpyInstance = useConsoleWarnSpy()
 
 		// Operating at 25% of the value shifts (e.g., instead of +/- 1) allows the tests to be also reliable for huge minValue/maxValue ranges like GainNode.gain param has
-		const differentInRangeValue: number = ((expectedMaxValue - expectedMinValue) * 0.25) + expectedMinValue // Taking value at 25% in-between of the param's min/max range
-		const lessThanMinValue: number = expectedMinValue - (Math.abs(expectedMinValue) * 0.25) // Taking value 25% less than min relative to the param's min/max range
-		const moreThanMaxValue: number = expectedMaxValue + (Math.abs(expectedMaxValue) * 0.25) // Taking value 25% more than max relative to the param's min/max range
+		const value25: number = rangePercent(0.25, expectedMinValue, expectedMaxValue)
+		const differentInRangeValue: number = expectedMinValue + value25 // Taking value at 25% in-between of the param's min/max range
+		const lessThanMinValue: number = expectedMinValue - value25 // Taking value 25% less than min relative to the param's min/max range
+		const moreThanMaxValue: number = expectedMaxValue + value25 // Taking value 25% more than max relative to the param's min/max range
 
 		it('is instance of AudioParam', () => {
 			const ctx: AudioContext = new AudioContext()
@@ -99,6 +101,8 @@ export const testAudioParam = ({
 			it('clamps & logs warning if the value received from setter is out of range', () => {
 				const ctx: AudioContext = new AudioContext()
 				const {node, param}: CreatorFnResult = creator(ctx)
+				console.info(`${nodeName}.${paramName} | lessThanMinValue: `, lessThanMinValue)
+				console.info(`${nodeName}.${paramName} | moreThanMaxValue: `, moreThanMaxValue)
 				expect(param.value).toEqual(expectedValue)
 				expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
 				param.value = lessThanMinValue

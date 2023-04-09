@@ -30,9 +30,13 @@ export class MockDelayNode extends MockAudioNode implements Omit<DelayNode,
 // DelayNode
 | 'delayTime' // To be deleted once MockAudioParam implements everything from AudioParam
 > {
-	// eslint-disable-next-line no-warning-comments
-	// TODO: prevent from modifications
-	public readonly delayTime: MockAudioParam
+	public get delayTime(): MockAudioParam {
+		return this._delayTime
+	}
+
+	private set delayTime(delayTime: MockAudioParam) {} // Prevents modifications
+
+	private _delayTime: MockAudioParam
 
 	constructor(context: BaseAudioContext, options: DelayOptions = {}) {
 		const {
@@ -52,7 +56,7 @@ export class MockDelayNode extends MockAudioNode implements Omit<DelayNode,
 			channelInterpretation,
 		})
 
-		this.delayTime = new MockDelayTimeAudioParam({
+		this._delayTime = new MockDelayTimeAudioParam({
 			delayTime,
 			maxDelayTime,
 		})
