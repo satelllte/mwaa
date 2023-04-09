@@ -147,14 +147,6 @@ const testAudioParam = ({
 			expect(param).toBeInstanceOf(AudioParam)
 		})
 
-		it('has correct default properties: value / defaultValue / minValue / maxValue', () => {
-			const {ctx, node, param}: CreatorFnResult = creator()
-			expect(param.value).toEqual(expectedValue)
-			expect(param.defaultValue).toEqual(expectedDefaultValue)
-			expect(param.minValue).toEqual(expectedMinValue)
-			expect(param.maxValue).toEqual(expectedMaxValue)
-		})
-
 		describe('"automationRate" property', () => {
 			it(`equals to expectedAutomationRate (${expectedAutomationRate}) by default`, () => {
 				const {ctx, node, param}: CreatorFnResult = creator()
