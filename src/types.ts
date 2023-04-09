@@ -1,6 +1,6 @@
 export type AudioNodeName =
-	| 'DelayNode'
-	| 'GainNode'
+| 'DelayNode'
+| 'GainNode'
 
 export type ModuleName = AudioNodeName
 | 'AudioContext'
