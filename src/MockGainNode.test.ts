@@ -1,4 +1,4 @@
-import {type SpyInstance, afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
+import {type SpyInstance, afterAll, beforeAll, describe, expect, it} from 'vitest'
 import {useConsoleWarnSpy} from './utils/testing/useConsoleWarnSpy'
 import {MWAA} from './MWAA'
 import {MockGainNode} from './MockGainNode'
