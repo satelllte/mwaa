@@ -32,99 +32,8 @@ describe('MockGainNode', () => {
 	testAudioNodeContext('GainNode')
 	testAudioNodeNumberOfInputsAndOutputs('GainNode', 1, 1)
 	testAudioNodeChannelCount('GainNode')
-
-	// eslint-disable-next-line no-warning-comments
-	// TODO: testAudioNodeChannelCountMode()
-	// eslint-disable-next-line no-warning-comments
-	// TODO: testAudioNodeChannelInterpretation()
-
-	/**
-	 * Tests for: channelCountMode
-	 */
-
-	it('has correct channelCountMode by default', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelCountMode).toEqual('max')
-	})
-
-	it('has correct channelCountMode from constructor', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx, {channelCountMode: 'clamped-max'})
-		expect(gainNode.channelCountMode).toEqual('clamped-max')
-	})
-
-	it('throws error if channelCountMode from constructor is wrong', () => {
-		const ctx: AudioContext = new AudioContext()
-		expect(() =>
-			// @ts-expect-error bad input test
-			new GainNode(ctx, {channelCountMode: 'clamped-maxx'}),
-		).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': Failed to read the \'channelCountMode\' property from \'AudioNodeOptions\': The provided value \'clamped-maxx\' is not a valid enum value of type ChannelCountMode."')
-	})
-
-	it('allows to update channelCountMode', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelCountMode).toEqual('max')
-		gainNode.channelCountMode = 'explicit'
-		expect(gainNode.channelCountMode).toEqual('explicit')
-	})
-
-	it('does not do anything but logs warning when trying to update to wrong channelCountMode', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelCountMode).toEqual('max')
-		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
-		// @ts-expect-error bad input testing
-		gainNode.channelCountMode = 'explicitt'
-		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
-		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'explicitt\' is not a valid enum value of type ChannelCountMode.')
-		expect(gainNode.channelCountMode).toEqual('max')
-	})
-
-	/**
-	 * Tests for: channelInterpretation
-	 */
-
-	it('has correct channelInterpretation by default', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelInterpretation).toEqual('speakers')
-	})
-
-	it('has correct channelInterpretation from constructor', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx, {channelInterpretation: 'discrete'})
-		expect(gainNode.channelInterpretation).toEqual('discrete')
-	})
-
-	it('throws error if channelInterpretation from constructor is wrong', () => {
-		const ctx: AudioContext = new AudioContext()
-		expect(() =>
-			// @ts-expect-error bad input test
-			new GainNode(ctx, {channelInterpretation: 'discr'}),
-		).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': Failed to read the \'channelInterpretation\' property from \'AudioNodeOptions\': The provided value \'discr\' is not a valid enum value of type ChannelInterpretation."')
-	})
-
-	it('allows to update channelInterpretation', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelInterpretation).toEqual('speakers')
-		gainNode.channelInterpretation = 'discrete'
-		expect(gainNode.channelInterpretation).toEqual('discrete')
-	})
-
-	it('does not do anything but logs warning when trying to update to wrong channelInterpretation', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelInterpretation).toEqual('speakers')
-		expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
-		// @ts-expect-error bad input testing
-		gainNode.channelInterpretation = 'bad'
-		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
-		expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'bad\' is not a valid enum value of type ChannelInterpretation.')
-		expect(gainNode.channelInterpretation).toEqual('speakers')
-	})
+	testAudioNodeChannelCountMode('GainNode')
+	testAudioNodeChannelInterpretation('GainNode')
 
 	/**
 	 * Tests for: "gain" AudioParam
@@ -333,6 +242,98 @@ const testAudioNodeChannelCount = (nodeName: AudioNodeName): void => {
 				node.channelCount = 'x'
 			}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (x) is outside the range [1, 32]"')
 			expect(node.channelCount).toEqual(2)
+		})
+	})
+}
+
+const testAudioNodeChannelCountMode = (nodeName: AudioNodeName): void => {
+	describe(`${nodeName}.channelCountMode`, () => {
+		const consoleWarnSpy: SpyInstance = useConsoleWarnSpy()
+
+		it('is "max" by default', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelCountMode).toEqual('max')
+		})
+
+		it('can be set from constructor', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx, {channelCountMode: 'clamped-max'})
+			expect(node.channelCountMode).toEqual('clamped-max')
+		})
+
+		it('throws error if the value from constructor is wrong', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(() =>
+				// @ts-expect-error bad input test
+				new globalThis[nodeName](ctx, {channelCountMode: 'clamped-maxx'}),
+			).toThrowErrorMatchingInlineSnapshot(`"Failed to construct '${nodeName}': Failed to read the 'channelCountMode' property from 'AudioNodeOptions': The provided value 'clamped-maxx' is not a valid enum value of type ChannelCountMode."`)
+		})
+
+		it('allows modifications from setter', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelCountMode).toEqual('max')
+			node.channelCountMode = 'explicit'
+			expect(node.channelCountMode).toEqual('explicit')
+		})
+
+		it('does not do anything but logs warning if the value from setter is wrong', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelCountMode).toEqual('max')
+			expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
+			// @ts-expect-error bad input testing
+			node.channelCountMode = 'explicitt'
+			expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+			expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'explicitt\' is not a valid enum value of type ChannelCountMode.')
+			expect(node.channelCountMode).toEqual('max')
+		})
+	})
+}
+
+const testAudioNodeChannelInterpretation = (nodeName: AudioNodeName): void => {
+	describe(`${nodeName}.channelInterpretation`, () => {
+		const consoleWarnSpy: SpyInstance = useConsoleWarnSpy()
+
+		it('is "speakers" by default', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelInterpretation).toEqual('speakers')
+		})
+
+		it('can be set from constructor', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx, {channelInterpretation: 'discrete'})
+			expect(node.channelInterpretation).toEqual('discrete')
+		})
+
+		it('throws error if the value from constructor is wrong', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(() =>
+				// @ts-expect-error bad input test
+				new globalThis[nodeName](ctx, {channelInterpretation: 'discr'}),
+			).toThrowErrorMatchingInlineSnapshot(`"Failed to construct '${nodeName}': Failed to read the 'channelInterpretation' property from 'AudioNodeOptions': The provided value 'discr' is not a valid enum value of type ChannelInterpretation."`)
+		})
+
+		it('allows modifications from setter', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelInterpretation).toEqual('speakers')
+			node.channelInterpretation = 'discrete'
+			expect(node.channelInterpretation).toEqual('discrete')
+		})
+
+		it('does not do anything but logs warning if the value from setter is wrong', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelInterpretation).toEqual('speakers')
+			expect(consoleWarnSpy).toHaveBeenCalledTimes(0)
+			// @ts-expect-error bad input testing
+			node.channelInterpretation = 'bad'
+			expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+			expect(consoleWarnSpy).toHaveBeenCalledWith('The provided value \'bad\' is not a valid enum value of type ChannelInterpretation.')
+			expect(node.channelInterpretation).toEqual('speakers')
 		})
 	})
 }
