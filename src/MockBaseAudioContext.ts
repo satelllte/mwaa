@@ -43,7 +43,8 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 
 		if (sampleRate < MockBaseAudioContext._sampleRateMin || sampleRate > MockBaseAudioContext._sampleRateMax) {
 			const targetName: string = new.target.name.replace('Mock', '')
-			throw new DOMException(`Failed to construct '${targetName}': The sample rate provided (${sampleRate}) is outside the range [${MockBaseAudioContext._sampleRateMin}, ${MockBaseAudioContext._sampleRateMax}]`)
+			// DOMException
+			throw new Error(`Failed to construct '${targetName}': The sample rate provided (${sampleRate}) is outside the range [${MockBaseAudioContext._sampleRateMin}, ${MockBaseAudioContext._sampleRateMax}]`)
 		}
 
 		this.sampleRate = sampleRate

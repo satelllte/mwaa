@@ -17,7 +17,8 @@ export class MockAudioNode implements Omit<AudioNode,
 
 	public set channelCount(channelCount: number) {
 		if (!MockAudioNode._isValidChannelCount(channelCount)) {
-			throw new DOMException(`Failed to set the 'channelCount' property on 'AudioNode': ${MockAudioNode._getChannelCountErrorMessage(channelCount)}`)
+			// DOMException
+			throw new Error(`Failed to set the 'channelCount' property on 'AudioNode': ${MockAudioNode._getChannelCountErrorMessage(channelCount)}`)
 		}
 
 		this._channelCount = channelCount
