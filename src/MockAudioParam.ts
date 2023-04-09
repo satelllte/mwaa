@@ -71,7 +71,7 @@ export class MockAudioParam implements Omit<AudioParam,
 		return automationRate === 'a-rate' || automationRate === 'k-rate'
 	}
 
-	private static _isValidValue(value: number | undefined): value is number {
+	private static _isValidValue(value: unknown): value is number {
 		// Web Audio API not only checks number type but also makes sure that it's finite, so values like "Infinity" are invalid
 		return Number.isFinite(value)
 	}
