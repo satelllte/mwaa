@@ -47,10 +47,7 @@
   },
   "scripts": {
     "build": "vite build && tsc",
-    "test:watch:lib:node": "vitest --coverage --environment node",
-    "test:watch:lib:browser": "vitest --coverage --environment happy-dom",
-    "test:lib:node": "vitest run --coverage --environment node",
-    "test:lib:browser": "vitest run --coverage --environment happy-dom",
+    "test:lib": "vitest --coverage",
     "test:lint": "eslint src"
   }
 }
