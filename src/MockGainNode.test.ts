@@ -22,11 +22,6 @@ describe('MockGainNode', () => {
 		expect(GainNode).toEqual(MockGainNode)
 	})
 
-	it('throws error if context argument is wrong', () => {
-		// @ts-expect-error testing error handling
-		expect(() => new GainNode('WRONG')).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': parameter 1 is not of type \'BaseAudioContext\'"')
-	})
-
 	it('initializes an instance of GainNode which extends AudioNode', () => {
 		const ctx: AudioContext = new AudioContext()
 		const gainNode: GainNode = new GainNode(ctx)
@@ -34,66 +29,14 @@ describe('MockGainNode', () => {
 		expect(gainNode).toBeInstanceOf(AudioNode)
 	})
 
-	it('assigns correct context', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.context).toEqual(ctx)
-	})
+	testAudioNodeContext('GainNode')
+	testAudioNodeNumberOfInputsAndOutputs('GainNode', 1, 1)
+	testAudioNodeChannelCount('GainNode')
 
-	it('has correct numberOfInputs & numberOfOutputs', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.numberOfInputs).toEqual(1)
-		expect(gainNode.numberOfOutputs).toEqual(1)
-	})
-
-	/**
-	 * Tests for: channelCount
-	 */
-
-	it('has correct channelCount by default', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelCount).toEqual(2)
-	})
-
-	it('has correct channelCount from constructor', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx, {channelCount: 4})
-		expect(gainNode.channelCount).toEqual(4)
-	})
-
-	it('throws error if channelCount from constructor is wrong', () => {
-		const ctx: AudioContext = new AudioContext()
-		expect(() =>
-			new GainNode(ctx, {channelCount: 0}),
-		).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'GainNode\': The channel count provided (0) is outside the range [1, 32]"')
-	})
-
-	it('allows to update channelCount', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelCount).toEqual(2)
-		gainNode.channelCount = 8
-		expect(gainNode.channelCount).toEqual(8)
-	})
-
-	it('throws error if trying to set wrong channelCount', () => {
-		const ctx: AudioContext = new AudioContext()
-		const gainNode: GainNode = new GainNode(ctx)
-		expect(gainNode.channelCount).toEqual(2)
-		expect(() => {
-			gainNode.channelCount = 0
-		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (0) is outside the range [1, 32]"')
-		expect(() => {
-			gainNode.channelCount = 33
-		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (33) is outside the range [1, 32]"')
-		expect(() => {
-			// @ts-expect-error testing input with wrong type
-			gainNode.channelCount = 'x'
-		}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (x) is outside the range [1, 32]"')
-		expect(gainNode.channelCount).toEqual(2)
-	})
+	// eslint-disable-next-line no-warning-comments
+	// TODO: testAudioNodeChannelCountMode()
+	// eslint-disable-next-line no-warning-comments
+	// TODO: testAudioNodeChannelInterpretation()
 
 	/**
 	 * Tests for: channelCountMode
@@ -280,3 +223,116 @@ describe('MockGainNode', () => {
 		})
 	})
 })
+
+// eslint-disable-next-line no-warning-comments
+// TODO: make all the `testAudioNode...` helpers shared
+
+type AudioNodeName =
+	| 'GainNode'
+
+const testAudioNodeContext = (nodeName: AudioNodeName): void => {
+	describe(`${nodeName}.context`, () => {
+		it('references the correct context', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.context).toEqual(ctx)
+		})
+
+		it('is read-only', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.context).toEqual(ctx)
+			// @ts-expect-error for testing
+			node.context = 'x'
+			expect(node.context).toEqual(ctx)
+		})
+
+		it('throws error if context argument is wrong from constructor', () => {
+			// @ts-expect-error for testing
+			expect(() => new globalThis[nodeName]('WRONG')).toThrowErrorMatchingInlineSnapshot(`"Failed to construct '${nodeName}': parameter 1 is not of type 'BaseAudioContext'"`)
+		})
+	})
+}
+
+const testAudioNodeNumberOfInputsAndOutputs = (
+	nodeName: AudioNodeName,
+	correctNumberOfInputs: number,
+	correctNumberOfOutputs: number,
+): void => {
+	describe(`${nodeName}.numberOfInputs / ${nodeName}.numberOfOutputs`, () => {
+		it(`has correct number of inputs (${correctNumberOfInputs}) & outputs (${correctNumberOfOutputs})`, () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.numberOfInputs).toEqual(correctNumberOfInputs)
+			expect(node.numberOfOutputs).toEqual(correctNumberOfOutputs)
+		})
+
+		it('is read-only', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.numberOfInputs).toEqual(correctNumberOfInputs)
+			expect(node.numberOfOutputs).toEqual(correctNumberOfOutputs)
+			// @ts-expect-error for testing
+			node.numberOfInputs = correctNumberOfInputs + 1
+			// @ts-expect-error for testing
+			node.numberOfOutputs = correctNumberOfOutputs + 1
+			expect(node.numberOfInputs).toEqual(correctNumberOfInputs)
+			expect(node.numberOfOutputs).toEqual(correctNumberOfOutputs)
+		})
+	})
+}
+
+const testAudioNodeChannelCount = (nodeName: AudioNodeName): void => {
+	describe(`${nodeName}.channelCount`, () => {
+		it('is 2 by default', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelCount).toEqual(2)
+		})
+
+		it('can be set from constructor', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx, {channelCount: 4})
+			expect(node.channelCount).toEqual(4)
+		})
+
+		it('throws error if the value from constructor is wrong', () => {
+			const ctx: AudioContext = new AudioContext()
+			expect(() =>
+				new globalThis[nodeName](ctx, {channelCount: 0}),
+			).toThrowErrorMatchingInlineSnapshot(`"Failed to construct '${nodeName}': The channel count provided (0) is outside the range [1, 32]"`)
+			expect(() =>
+				new globalThis[nodeName](ctx, {channelCount: 33}),
+			).toThrowErrorMatchingInlineSnapshot(`"Failed to construct '${nodeName}': The channel count provided (33) is outside the range [1, 32]"`)
+			expect(() =>
+				// @ts-expect-error testing
+				new globalThis[nodeName](ctx, {channelCount: 'x'}),
+			).toThrowErrorMatchingInlineSnapshot(`"Failed to construct '${nodeName}': The channel count provided (x) is outside the range [1, 32]"`)
+		})
+
+		it('allows modifications from setter', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelCount).toEqual(2)
+			node.channelCount = 8
+			expect(node.channelCount).toEqual(8)
+		})
+
+		it('throws error if the value from setter is wrong', () => {
+			const ctx: AudioContext = new AudioContext()
+			const node: AudioNode = new globalThis[nodeName](ctx)
+			expect(node.channelCount).toEqual(2)
+			expect(() => {
+				node.channelCount = 0
+			}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (0) is outside the range [1, 32]"')
+			expect(() => {
+				node.channelCount = 33
+			}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (33) is outside the range [1, 32]"')
+			expect(() => {
+				// @ts-expect-error testing input with wrong type
+				node.channelCount = 'x'
+			}).toThrowErrorMatchingInlineSnapshot('"Failed to set the \'channelCount\' property on \'AudioNode\': The channel count provided (x) is outside the range [1, 32]"')
+			expect(node.channelCount).toEqual(2)
+		})
+	})
+}

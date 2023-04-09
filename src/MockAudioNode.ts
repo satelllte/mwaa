@@ -88,9 +88,27 @@ export class MockAudioNode implements Omit<AudioNode,
 		return `The provided value '${channelInterpretation}' is not a valid enum value of type ChannelInterpretation.`
 	}
 
-	public readonly context: BaseAudioContext
-	public readonly numberOfInputs: number
-	public readonly numberOfOutputs: number
+	public get context(): BaseAudioContext {
+		return this._context
+	}
+
+	private set context(context: BaseAudioContext) {} // Prevent modifications
+
+	public get numberOfInputs(): number {
+		return this._numberOfInputs
+	}
+
+	private set numberOfInputs(numberOfInputs: number) {} // Prevent modifications
+
+	public get numberOfOutputs(): number {
+		return this._numberOfOutputs
+	}
+
+	private set numberOfOutputs(numberOfOutputs: number) {} // Prevent modifications
+
+	private _numberOfInputs: number
+	private _numberOfOutputs: number
+	private _context: BaseAudioContext
 	private _channelCount: number
 	private _channelCountMode: ChannelCountMode
 	private _channelInterpretation: ChannelInterpretation
@@ -134,9 +152,9 @@ export class MockAudioNode implements Omit<AudioNode,
 			throw new TypeError(`Failed to construct '${targetName}': Failed to read the 'channelInterpretation' property from 'AudioNodeOptions': ${MockAudioNode._getChannelInterpretationErrorMessage(channelInterpretation)}`)
 		}
 
-		this.context = context
-		this.numberOfInputs = numberOfInputs
-		this.numberOfOutputs = numberOfOutputs
+		this._context = context
+		this._numberOfInputs = numberOfInputs
+		this._numberOfOutputs = numberOfOutputs
 		this._channelCount = channelCount
 		this._channelCountMode = channelCountMode
 		this._channelInterpretation = channelInterpretation
