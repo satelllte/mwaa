@@ -3,6 +3,7 @@ import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
 import {MockAudioParam} from './MockAudioParam'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
+import {MockDelayNode} from './MockDelayNode'
 import {MockGainNode} from './MockGainNode'
 import {MWAA} from './MWAA'
 
@@ -41,6 +42,7 @@ const confirmWebAudioApiUndefined = (): void => {
 	confirm(globalThis.AudioNode)
 	confirm(globalThis.AudioParam)
 	confirm(globalThis.BaseAudioContext)
+	confirm(globalThis.DelayNode)
 	confirm(globalThis.GainNode)
 }
 
@@ -54,5 +56,6 @@ const confirmWebAudioApiDefined = (): void => {
 	confirm(globalThis.AudioNode, MockAudioNode)
 	confirm(globalThis.AudioParam, MockAudioParam)
 	confirm(globalThis.BaseAudioContext, MockBaseAudioContext)
+	confirm(globalThis.DelayNode, MockDelayNode)
 	confirm(globalThis.GainNode, MockGainNode)
 }
