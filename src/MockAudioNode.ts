@@ -1,7 +1,7 @@
 type MockAudioNodeOptions = AudioNodeOptions & {
 	context?: BaseAudioContext;
-	numberOfInputs?: number;
-	numberOfOutputs?: number;
+	numberOfInputs: number;
+	numberOfOutputs: number;
 }
 
 export class MockAudioNode implements Omit<AudioNode,
@@ -52,12 +52,6 @@ export class MockAudioNode implements Omit<AudioNode,
 		this._channelInterpretation = channelInterpretation
 	}
 
-	private static _numberOfInputsDefault: number = 1
-	private static _numberOfInputsMin: number = 0
-	private static _numberOfInputsMax: number = 6
-	private static _numberOfOutputsDefault: number = 1
-	private static _numberOfOutputsMin: number = 0
-	private static _numberOfOutputsMax: number = 6
 	private static _channelCountDefault: number = 2
 	private static _channelCountMin: number = 1
 	private static _channelCountMax: number = 32
@@ -113,7 +107,7 @@ export class MockAudioNode implements Omit<AudioNode,
 	private _channelCountMode: ChannelCountMode
 	private _channelInterpretation: ChannelInterpretation
 
-	protected constructor(options?: MockAudioNodeOptions) {
+	protected constructor(options: MockAudioNodeOptions) {
 		if (new.target === MockAudioNode) {
 			throw new TypeError('Illegal constructor')
 		}
@@ -122,22 +116,14 @@ export class MockAudioNode implements Omit<AudioNode,
 		const targetName: string = mockTargetName.replace('Mock', '')
 
 		const context: BaseAudioContext | undefined = options?.context
-		const numberOfInputs: number = options?.numberOfInputs ?? MockAudioNode._numberOfInputsDefault
-		const numberOfOutputs: number = options?.numberOfOutputs ?? MockAudioNode._numberOfOutputsDefault
+		const numberOfInputs: number = options?.numberOfInputs
+		const numberOfOutputs: number = options?.numberOfOutputs
 		const channelCount: number = options?.channelCount ?? MockAudioNode._channelCountDefault
 		const channelCountMode: ChannelCountMode = options?.channelCountMode ?? MockAudioNode._channelCountModeDefault
 		const channelInterpretation: ChannelInterpretation = options?.channelInterpretation ?? MockAudioNode._channelInterpretationDefault
 
 		if (!(context instanceof BaseAudioContext)) {
 			throw new TypeError(`Failed to construct '${targetName}': parameter 1 is not of type 'BaseAudioContext'`)
-		}
-
-		if (numberOfInputs < MockAudioNode._numberOfInputsMin || numberOfInputs > MockAudioNode._numberOfInputsMax) {
-			throw new TypeError(`Failed to define '${mockTargetName}': numberOfInputs ${Number(numberOfInputs)} is out of [${MockAudioNode._numberOfInputsMin}, ${MockAudioNode._numberOfInputsMax}] range`)
-		}
-
-		if (numberOfOutputs < MockAudioNode._numberOfOutputsMin || numberOfOutputs > MockAudioNode._numberOfOutputsMax) {
-			throw new TypeError(`Failed to define '${mockTargetName}': numberOfOutputs ${Number(numberOfOutputs)} is out of [${MockAudioNode._numberOfOutputsMin}, ${MockAudioNode._numberOfOutputsMax}] range`)
 		}
 
 		if (!MockAudioNode._isValidChannelCount(channelCount)) {

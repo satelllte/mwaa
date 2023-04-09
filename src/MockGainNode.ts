@@ -35,6 +35,8 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 		}: GainOptions = options
 
 		super({
+			numberOfInputs: 1,
+			numberOfOutputs: 1,
 			context,
 			channelCount,
 			channelCountMode,
