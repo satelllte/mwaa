@@ -49,6 +49,24 @@ export class MockAudioParam implements Omit<AudioParam,
 		this._value = value
 	}
 
+	public get defaultValue(): number {
+		return this._defaultValue
+	}
+
+	private set defaultValue(defaultValue: number) {} // Prevent modifications
+
+	public get minValue(): number {
+		return this._minValue
+	}
+
+	private set minValue(minValue: number) {} // Prevent modifications
+
+	public get maxValue(): number {
+		return this._maxValue
+	}
+
+	private set maxValue(maxValue: number) {} // Prevent modifications
+
 	private static _isValidAutomationRate(automationRate: AutomationRate | undefined): automationRate is AutomationRate {
 		return automationRate === 'a-rate' || automationRate === 'k-rate'
 	}
@@ -58,48 +76,31 @@ export class MockAudioParam implements Omit<AudioParam,
 		return Number.isFinite(value)
 	}
 
-	public readonly defaultValue: number
-	public readonly minValue: number
-	public readonly maxValue: number
-
 	private _automationRate: AutomationRate
 	private _value: number
+	private _defaultValue: number
+	private _minValue: number
+	private _maxValue: number
 
-	protected constructor(options?: MockAudioParamOptions) {
+	protected constructor(options: MockAudioParamOptions) {
 		if (new.target === MockAudioParam) {
 			throw new TypeError('Illegal constructor')
 		}
 
-		const automationRate: AutomationRate | undefined = options?.automationRate
-		const defaultValue: number | undefined = options?.defaultValue
-		const minValue: number | undefined = options?.minValue
-		const maxValue: number | undefined = options?.maxValue
-		const value: number | undefined = options?.value ?? defaultValue
-
-		if (!MockAudioParam._isValidAutomationRate(automationRate)) {
-			throw new TypeError('Cannot create MockAudioParam: Must provide valid "automationRate"')
-		}
-
-		if (!MockAudioParam._isValidValue(defaultValue)) {
-			throw new TypeError('Cannot create MockAudioParam: Must provide valid "defaultValue"')
-		}
-
-		if (!MockAudioParam._isValidValue(minValue)) {
-			throw new TypeError('Cannot create MockAudioParam: Must provide valid "minValue"')
-		}
-
-		if (!MockAudioParam._isValidValue(maxValue)) {
-			throw new TypeError('Cannot create MockAudioParam: Must provide valid "maxValue"')
-		}
+		const automationRate: AutomationRate = options?.automationRate
+		const defaultValue: number = options?.defaultValue
+		const minValue: number = options?.minValue
+		const maxValue: number = options?.maxValue
+		const value: number = options?.value ?? defaultValue
 
 		if (!MockAudioParam._isValidValue(value)) {
 			throw new TypeError('The provided float value is non-finite')
 		}
 
 		this._automationRate = automationRate
-		this.defaultValue = defaultValue
-		this.minValue = minValue
-		this.maxValue = maxValue
+		this._defaultValue = defaultValue
+		this._minValue = minValue
+		this._maxValue = maxValue
 		this._value = value
 		this.value = value // This will clamp the value & log warning (if that's the case)
 	}
