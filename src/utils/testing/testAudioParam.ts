@@ -65,6 +65,8 @@ export const testAudioParam = ({
 				const ctx: AudioContext = new AudioContext()
 				const {node, param}: CreatorFnResult = creator(ctx)
 				expect(param.automationRate).toEqual(expectedAutomationRate)
+				// eslint-disable-next-line no-warning-comments
+				// TODO: once expectedAutomationRate equals to "k-rate" in some case, the c8 warning will go & this comment can be removed
 				const flippedAutomationRate: AutomationRate = expectedAutomationRate === 'a-rate' ? 'k-rate' : 'a-rate'
 				param.automationRate = flippedAutomationRate
 				expect(param.automationRate).toEqual(flippedAutomationRate)
