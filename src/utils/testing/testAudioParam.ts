@@ -41,6 +41,17 @@ export const testAudioParam = ({
 			expect(param).toBeInstanceOf(AudioParam)
 		})
 
+		it('cannot be modified', () => {
+			const ctx: AudioContext = new AudioContext()
+			const {node, param}: CreatorFnResult = creator(ctx)
+			// @ts-expect-error for testing
+			expect(node[paramName]).toEqual(param)
+			// @ts-expect-error for testing
+			node[paramName] = 'x'
+			// @ts-expect-error for testing
+			expect(node[paramName]).toEqual(param)
+		})
+
 		describe('"automationRate" property', () => {
 			it(`equals to expectedAutomationRate (${expectedAutomationRate}) by default`, () => {
 				const ctx: AudioContext = new AudioContext()

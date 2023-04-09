@@ -24,9 +24,13 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 // GainNode
 | 'gain' // To be deleted once MockAudioParam implements everything from AudioParam
 > {
-	// eslint-disable-next-line no-warning-comments
-	// TODO: prevent from modifications
-	public readonly gain: MockAudioParam
+	public get gain(): MockAudioParam {
+		return this._gain
+	}
+
+	private set gain(gain: MockAudioParam) {} // Prevents modifications
+
+	private _gain: MockAudioParam
 
 	constructor(context: BaseAudioContext, options: GainOptions = {}) {
 		const {
@@ -45,6 +49,6 @@ export class MockGainNode extends MockAudioNode implements Omit<GainNode,
 			channelInterpretation,
 		})
 
-		this.gain = new MockGainAudioParam(gain)
+		this._gain = new MockGainAudioParam(gain)
 	}
 }
