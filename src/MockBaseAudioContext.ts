@@ -28,6 +28,8 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 	// eslint-disable-next-line no-warning-comments
 	// TODO: in the future Autoplay policy behaviour can also be simulated: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy
 	private static _stateDefault: AudioContextState = 'running'
+	// eslint-disable-next-line no-warning-comments
+	// TODO: set min/max to 8,000 / 96,000 which guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
 	private static _sampleRateDefault: number = 44100
 	private static _sampleRateMin: number = 3000 // https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/platform/audio/AudioUtilities.cpp -> minAudioBufferSampleRate
 	private static _sampleRateMax: number = 192000 // https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/platform/audio/AudioUtilities.cpp -> maxAudioBufferSampleRate
