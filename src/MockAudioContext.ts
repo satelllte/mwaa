@@ -4,10 +4,6 @@ import {clamp} from './utils/math/clamp'
 type LatencyHint = AudioContextLatencyCategory | number
 
 export class MockAudioContext extends MockBaseAudioContext implements Omit<AudioContext,
-// EventTarget
-| 'addEventListener'
-| 'removeEventListener'
-| 'dispatchEvent'
 // BaseAudioContext
 | 'audioWorklet'
 | 'destination'
@@ -39,7 +35,6 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 | 'createMediaStreamSource'
 | 'getOutputTimestamp'
 | 'resume'
-| 'suspend'
 > {
 	private static _defaultLatencyHint: AudioContextLatencyCategory | number = 'interactive'
 	private static _baseLatencyMin: number = 0.0001
@@ -121,5 +116,13 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 
 		this._baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
 		this._outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
+	}
+
+	public async suspend(): Promise<void> {
+		await Promise.resolve()
+		if (this._state === 'running') {
+			this._state = 'suspended'
+			this.dispatchEvent(new Event('statechange'))
+		}
 	}
 }

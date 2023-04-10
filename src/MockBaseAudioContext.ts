@@ -1,8 +1,4 @@
-export class MockBaseAudioContext implements Omit<BaseAudioContext,
-// EventTarget
-| 'addEventListener'
-| 'removeEventListener'
-| 'dispatchEvent'
+export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioContext,
 // BaseAudioContext
 | 'audioWorklet'
 | 'destination'
@@ -43,7 +39,7 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 	private set currentTime(currentTime: number) {} // Prevents direct modifications
 
 	public get state(): AudioContextState {
-		return MockBaseAudioContext._stateDefault
+		return this._state
 	}
 
 	private set state(state: AudioContextState) {} // Prevents direct modifications
@@ -54,9 +50,12 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 
 	private set sampleRate(sampleRate: number) {} // Prevents direct modifications
 
+	protected _state: AudioContextState
 	private _sampleRate: number
 
 	protected constructor(sampleRate: number = MockBaseAudioContext._sampleRateDefault) {
+		super()
+
 		if (new.target === MockBaseAudioContext) {
 			throw new TypeError('Illegal constructor')
 		}
@@ -67,6 +66,19 @@ export class MockBaseAudioContext implements Omit<BaseAudioContext,
 			throw new Error(`Failed to construct '${targetName}': The sample rate provided (${sampleRate}) is outside the range [${MockBaseAudioContext._sampleRateMin}, ${MockBaseAudioContext._sampleRateMax}]`)
 		}
 
+		this._state = MockBaseAudioContext._stateDefault
 		this._sampleRate = sampleRate
+	}
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: test
+	public addEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
+		super.addEventListener(type, listener, options)
+	}
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: test
+	public removeEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
+		super.removeEventListener(type, listener, options)
 	}
 }
