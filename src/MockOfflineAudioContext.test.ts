@@ -29,6 +29,10 @@ describe('MockOfflineAudioContext', () => {
 		expect(ctx).toBeInstanceOf(BaseAudioContext)
 	})
 
+	describe('constructor', () => {
+		
+	})
+
 	// eslint-disable-next-line no-warning-comments
 	// TODO: do the shared `testBaseAudioContext()`
 	// ...
