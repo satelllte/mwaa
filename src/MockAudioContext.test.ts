@@ -124,18 +124,4 @@ describe('MockAudioContext', () => {
 			expect(ctx.outputLatency).toEqual(0.009)
 		})
 	})
-
-	// eslint-disable-next-line no-warning-comments
-	// TODO: test properly
-	describe.todo('EventTarget', () => {
-		it('test', async () => {
-			const ctx: AudioContext = new AudioContext()
-			expect(ctx.state).toEqual('running')
-			ctx.addEventListener('statechange', (event: Event) => {
-				console.info('event: ', event)
-			})
-			await ctx.suspend()
-			expect(ctx.state).toEqual('suspended')
-		})
-	})
 })

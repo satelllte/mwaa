@@ -34,6 +34,7 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 | 'createMediaStreamDestination'
 | 'createMediaStreamSource'
 | 'getOutputTimestamp'
+| 'suspend'
 | 'resume'
 > {
 	private static _defaultLatencyHint: AudioContextLatencyCategory | number = 'interactive'
@@ -116,13 +117,5 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 
 		this._baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
 		this._outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
-	}
-
-	public async suspend(): Promise<void> {
-		await Promise.resolve()
-		if (this._state === 'running') {
-			this._state = 'suspended'
-			this.dispatchEvent(new Event('statechange'))
-		}
 	}
 }
