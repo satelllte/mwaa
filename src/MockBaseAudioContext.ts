@@ -80,13 +80,13 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: test
-	public addEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
-		super.addEventListener(type, listener, options)
-	}
+	// public addEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
+	// 	super.addEventListener(type, listener, options)
+	// }
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: test
-	public removeEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
-		super.removeEventListener(type, listener, options)
-	}
+	// public removeEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
+	// 	super.removeEventListener(type, listener, options)
+	// }
 }
