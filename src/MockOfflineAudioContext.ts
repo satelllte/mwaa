@@ -43,7 +43,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 	private static _lengthMin: number = 1
 
 	private static _validateNumberOfChannels(numberOfChannels: number): void {
-		if (numberOfChannels < MockOfflineAudioContext._numberOfChannelsMin || numberOfChannels > MockOfflineAudioContext._numberOfChannelsMax) {
+		if (!Number.isFinite(numberOfChannels) || numberOfChannels < MockOfflineAudioContext._numberOfChannelsMin || numberOfChannels > MockOfflineAudioContext._numberOfChannelsMax) {
 			// DOMException
 			throw new Error(`Failed to construct 'OfflineAudioContext': The number of channels provided (${numberOfChannels}) is outside the range [${MockOfflineAudioContext._numberOfChannelsMin}, ${MockOfflineAudioContext._numberOfChannelsMax}]`)
 		}
@@ -56,6 +56,12 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		}
 	}
 
+	private static _validateSampleRate(sampleRate: number): void {
+		if (!MockBaseAudioContext._isValidSampleRateValue(sampleRate)) {
+			throw new TypeError('Failed to construct \'OfflineAudioContext\': The provided float value is non-finite')
+		}
+	}
+
 	private _length: number
 
 	constructor(contextOptions: OfflineAudioContextOptions)
@@ -64,10 +70,11 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		if (args.length === 1) {
 			const contextOptions: OfflineAudioContextOptions = args[0]
 			const numberOfChannels: number = contextOptions?.numberOfChannels ?? MockOfflineAudioContext._numberOfChannelsDefault
-			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
 			const length: number = contextOptions?.length
-			MockOfflineAudioContext._validateLength(length)
 			const sampleRate: number = contextOptions?.sampleRate
+			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
+			MockOfflineAudioContext._validateLength(length)
+			MockOfflineAudioContext._validateSampleRate(sampleRate)
 			super(sampleRate)
 			this._length = length
 			return
@@ -77,6 +84,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 			const [numberOfChannels, length, sampleRate]: [number, number, number] = args
 			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
 			MockOfflineAudioContext._validateLength(length)
+			MockOfflineAudioContext._validateSampleRate(sampleRate)
 			super(sampleRate)
 			this._length = length
 			return
@@ -86,6 +94,8 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 			throw new TypeError('Failed to construct \'OfflineAudioContext\': 1 argument required, but only 0 present')
 		}
 
+		// eslint-disable-next-line no-warning-comments
+		// TODO: figure out why this warns in c8 test though looks like it's tested
 		throw new TypeError('Failed to construct \'OfflineAudioContext\': Overload resolution failed.')
 	}
 }

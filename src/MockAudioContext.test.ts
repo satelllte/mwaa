@@ -69,8 +69,8 @@ describe('MockAudioContext', () => {
 		})
 
 		it('throws error if custom value specified in constructor is out of device\'s range', () => {
-			expect(() => new AudioContext({sampleRate: 1})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1) is outside the range [3000, 192000]"')
-			expect(() => new AudioContext({sampleRate: 1000000})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1000000) is outside the range [3000, 192000]"')
+			expect(() => new AudioContext({sampleRate: 1})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1) is outside the range [8000, 96000]"')
+			expect(() => new AudioContext({sampleRate: 1000000})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1000000) is outside the range [8000, 96000]"')
 		})
 
 		it('cannot be modified directly', () => {
