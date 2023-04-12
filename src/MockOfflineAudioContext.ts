@@ -95,7 +95,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		}
 
 		// eslint-disable-next-line no-warning-comments
-		// TODO: figure out why this warns in c8 test though looks like it's tested
+		// TODO: figure out why this warns in c8 coverage though it's tested in "throws if 2 arguments passed" test
 		throw new TypeError('Failed to construct \'OfflineAudioContext\': Overload resolution failed.')
 	}
 }
