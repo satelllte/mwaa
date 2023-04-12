@@ -20,35 +20,7 @@ describe('MockOfflineAudioContext', () => {
 	})
 
 	testOfflineAudioContextConstructor()
-
-	describe('length', () => {
-		it('sets from constructor', () => {
-			const numberOfChannels: number = 2
-			const sampleRate: number = 44100
-			const length: number = numberOfChannels * sampleRate * 10
-			const ctx: OfflineAudioContext = new OfflineAudioContext({
-				numberOfChannels,
-				sampleRate,
-				length,
-			})
-			expect(ctx.length).toEqual(length)
-		})
-
-		it('is read-only', () => {
-			const numberOfChannels: number = 2
-			const sampleRate: number = 44100
-			const length: number = numberOfChannels * sampleRate * 10
-			const ctx: OfflineAudioContext = new OfflineAudioContext({
-				numberOfChannels,
-				sampleRate,
-				length,
-			})
-			expect(ctx.length).toEqual(length)
-			// @ts-expect-error for testing
-			ctx.length = length / 2
-			expect(ctx.length).toEqual(length)
-		})
-	})
+	testOfflineAudioContextLength()
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: do the shared `testBaseAudioContext()`
@@ -194,6 +166,35 @@ const testOfflineAudioContextConstructor = (): void => {
 					).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'OfflineAudioContext\': The provided float value is non-finite"')
 				})
 			})
+		})
+	})
+}
+
+const testOfflineAudioContextLength = (): void => {
+	const numberOfChannels: number = 2
+	const sampleRate: number = 44100
+	const length: number = numberOfChannels * sampleRate * 10
+
+	describe('length', () => {
+		it('sets from constructor', () => {
+			const ctx: OfflineAudioContext = new OfflineAudioContext({
+				numberOfChannels,
+				sampleRate,
+				length,
+			})
+			expect(ctx.length).toEqual(length)
+		})
+
+		it('is read-only', () => {
+			const ctx: OfflineAudioContext = new OfflineAudioContext({
+				numberOfChannels,
+				sampleRate,
+				length,
+			})
+			expect(ctx.length).toEqual(length)
+			// @ts-expect-error for testing
+			ctx.length = length / 2
+			expect(ctx.length).toEqual(length)
 		})
 	})
 }
