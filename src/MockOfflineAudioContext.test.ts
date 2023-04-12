@@ -1,4 +1,5 @@
 import {afterAll, beforeAll, describe, expect, it} from 'vitest'
+import {testBaseAudioContext} from './utils/testing/testBaseAudioContext'
 import {MWAA} from './MWAA'
 import {MockOfflineAudioContext} from './MockOfflineAudioContext'
 
@@ -19,14 +20,13 @@ describe('MockOfflineAudioContext', () => {
 		expect(OfflineAudioContext).toEqual(MockOfflineAudioContext)
 	})
 
+	testBaseAudioContext(() => new OfflineAudioContext({
+		length: 44100 * 10,
+		sampleRate: 44100,
+	}))
+
 	testOfflineAudioContextConstructor()
 	testOfflineAudioContextLength()
-
-	// eslint-disable-next-line no-warning-comments
-	// TODO: do the shared `testBaseAudioContext()`
-	// ...
-	// ...
-	// ...
 })
 
 const testOfflineAudioContextConstructor = (): void => {
@@ -65,6 +65,12 @@ const testOfflineAudioContextConstructor = (): void => {
 				// @ts-expect-error for testing
 				new OfflineAudioContext(2, 44100 * 5 * 2),
 			).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'OfflineAudioContext\': Overload resolution failed."')
+		})
+
+		it('initializes an instance of OfflineAudioContext which extends BaseAudioContext', () => {
+			const ctx: OfflineAudioContext = new OfflineAudioContext({numberOfChannels, length, sampleRate})
+			expect(ctx).toBeInstanceOf(OfflineAudioContext)
+			expect(ctx).toBeInstanceOf(BaseAudioContext)
 		})
 
 		describe.each(overloads)('overload: $name', ({createContext}: Overload) => {
