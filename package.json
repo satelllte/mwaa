@@ -15,6 +15,9 @@
     "test",
     "mock",
     "mock-audio",
+    "sound",
+    "dsp",
+    "typescript",
     "mwaa"
   ],
   "license": "MIT",
