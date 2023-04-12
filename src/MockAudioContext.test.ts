@@ -28,6 +28,12 @@ describe('MockAudioContext', () => {
 
 	testBaseAudioContext(() => new AudioContext())
 
+	testAudioContextState()
+	testAudioContextSampleRate()
+	testAudioContextLatency()
+})
+
+const testAudioContextState = (): void => {
 	describe('state', () => {
 		// eslint-disable-next-line no-warning-comments
 		// TODO: in the future Autoplay policy behaviour can also be simulated: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy
@@ -36,7 +42,9 @@ describe('MockAudioContext', () => {
 			expect(ctx.state).toEqual('running')
 		})
 	})
+}
 
+const testAudioContextSampleRate = (): void => {
 	describe('sampleRate', () => {
 		it('equals to 44100 by default', () => {
 			const ctx: AudioContext = new AudioContext()
@@ -53,7 +61,9 @@ describe('MockAudioContext', () => {
 			expect(() => new AudioContext({sampleRate: 1000000})).toThrowErrorMatchingInlineSnapshot('"Failed to construct \'AudioContext\': The sample rate provided (1000000) is outside the range [8000, 96000]"')
 		})
 	})
+}
 
+const testAudioContextLatency = (): void => {
 	describe('latencyHint / baseLatency / outputLatency', () => {
 		it('equals to the mock values of "interactive" latencyHint by default', () => {
 			const ctx: AudioContext = new AudioContext()
@@ -96,4 +106,4 @@ describe('MockAudioContext', () => {
 			expect(ctx.outputLatency).toEqual(0.009)
 		})
 	})
-})
+}
