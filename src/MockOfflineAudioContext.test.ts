@@ -32,7 +32,7 @@ describe('MockOfflineAudioContext', () => {
 const testOfflineAudioContextConstructor = (): void => {
 	const numberOfChannels: number = 2
 	const sampleRate: number = 44100
-	const length: number = numberOfChannels * sampleRate * 10
+	const length: number = sampleRate * 10
 
 	type Overload = {
 		name: string;
@@ -173,7 +173,7 @@ const testOfflineAudioContextConstructor = (): void => {
 const testOfflineAudioContextLength = (): void => {
 	const numberOfChannels: number = 2
 	const sampleRate: number = 44100
-	const length: number = numberOfChannels * sampleRate * 10
+	const length: number = sampleRate * 10
 
 	describe('length', () => {
 		it('sets from constructor', () => {
