@@ -27,6 +27,7 @@ describe('MockOfflineAudioContext', () => {
 
 	testOfflineAudioContextConstructor()
 	testOfflineAudioContextLength()
+	testOfflineAudioContextState()
 })
 
 const testOfflineAudioContextConstructor = (): void => {
@@ -201,6 +202,21 @@ const testOfflineAudioContextLength = (): void => {
 			// @ts-expect-error for testing
 			ctx.length = length / 2
 			expect(ctx.length).toEqual(length)
+		})
+	})
+}
+
+const testOfflineAudioContextState = (): void => {
+	const sampleRate: number = 44100
+	const length: number = sampleRate * 10
+
+	describe('state', () => {
+		it('is "suspended" initially', () => {
+			const ctx: OfflineAudioContext = new OfflineAudioContext({
+				sampleRate,
+				length,
+			})
+			expect(ctx.state).toEqual('suspended')
 		})
 	})
 }

@@ -33,9 +33,6 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 	}
 
 	private static _currentTimeDefault: number = 0
-	// eslint-disable-next-line no-warning-comments
-	// TODO: in the future Autoplay policy behaviour can also be simulated: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy
-	private static _stateDefault: AudioContextState = 'running'
 	private static _sampleRateDefault: number = 44100
 	private static _sampleRateMin: number = 8000 // Min sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
 	private static _sampleRateMax: number = 96000 // Max sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
@@ -61,7 +58,10 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 	protected _state: AudioContextState
 	private _sampleRate: number
 
-	protected constructor(sampleRate: number = MockBaseAudioContext._sampleRateDefault) {
+	protected constructor(
+		state: AudioContextState,
+		sampleRate: number = MockBaseAudioContext._sampleRateDefault,
+	) {
 		super()
 
 		if (new.target === MockBaseAudioContext) {
@@ -74,9 +74,16 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 			throw new Error(`Failed to construct '${targetName}': The sample rate provided (${sampleRate}) is outside the range [${MockBaseAudioContext._sampleRateMin}, ${MockBaseAudioContext._sampleRateMax}]`)
 		}
 
-		this._state = MockBaseAudioContext._stateDefault
+		this._state = state
 		this._sampleRate = sampleRate
 	}
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: try this approach
+	// protected _setState(state: AudioContextState): void {
+	// 	this._state = state
+	// 	this.dispatchEvent(new Event('statechange'))
+	// }
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: test

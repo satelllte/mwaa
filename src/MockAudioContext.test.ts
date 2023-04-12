@@ -37,7 +37,7 @@ const testAudioContextState = (): void => {
 	describe('state', () => {
 		// eslint-disable-next-line no-warning-comments
 		// TODO: in the future Autoplay policy behaviour can also be simulated: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy
-		it('equals to "running" by default', () => {
+		it('is "running" initially', () => {
 			const ctx: AudioContext = new AudioContext()
 			expect(ctx.state).toEqual('running')
 		})

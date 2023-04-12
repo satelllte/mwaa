@@ -67,6 +67,8 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 	constructor(contextOptions: OfflineAudioContextOptions)
 	constructor(numberOfChannels: number, length: number, sampleRate: number)
 	constructor(...args: [OfflineAudioContextOptions] | [number, number, number]) {
+		const state: AudioContextState = 'suspended'
+
 		if (args.length === 1) {
 			const contextOptions: OfflineAudioContextOptions = args[0]
 			const numberOfChannels: number = contextOptions?.numberOfChannels ?? MockOfflineAudioContext._numberOfChannelsDefault
@@ -75,7 +77,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
 			MockOfflineAudioContext._validateLength(length)
 			MockOfflineAudioContext._validateSampleRate(sampleRate)
-			super(sampleRate)
+			super(state, sampleRate)
 			this._length = length
 			return
 		}
@@ -85,7 +87,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
 			MockOfflineAudioContext._validateLength(length)
 			MockOfflineAudioContext._validateSampleRate(sampleRate)
-			super(sampleRate)
+			super(state, sampleRate)
 			this._length = length
 			return
 		}
