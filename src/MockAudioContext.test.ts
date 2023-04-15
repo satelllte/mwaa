@@ -37,8 +37,6 @@ describe('MockAudioContext', () => {
 const testAudioContextEventTarget = (): void => {
 	describe('EventTarget', () => {
 		const getStateChangeEventForContext = (ctx: BaseAudioContext): Partial<Event> => ({
-			currentTarget: ctx,
-			srcElement: ctx,
 			target: ctx,
 			type: 'statechange',
 		})
@@ -69,6 +67,7 @@ const testAudioContextEventTarget = (): void => {
 			expect(listenerSpy).toHaveBeenCalledTimes(1)
 			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
 			ctx.onstatechange = null
+			expect(ctx.onstatechange).toEqual(null)
 			await ctx.resume()
 			expect(listenerSpy).toHaveBeenCalledTimes(1)
 		})
