@@ -29,13 +29,10 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 | 'createWaveShaper'
 | 'decodeAudioData'
 // AudioContext
-| 'close'
 | 'createMediaElementSource'
 | 'createMediaStreamDestination'
 | 'createMediaStreamSource'
 | 'getOutputTimestamp'
-| 'suspend'
-| 'resume'
 > {
 	private static _defaultLatencyHint: AudioContextLatencyCategory | number = 'interactive'
 	private static _baseLatencyMin: number = 0.0001
@@ -123,5 +120,63 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 
 		this._baseLatency = MockAudioContext._getBaseLatencyForHint(latencyHint)
 		this._outputLatency = MockAudioContext._getOutputLatencyForHint(latencyHint)
+	}
+
+	public async close(): Promise<void> {
+		return new Promise((
+			resolve: (value: void | PromiseLike<void>) => void,
+			reject: (reason?: any) => void,
+		) => {
+			if (this._state === 'closed') {
+				// DOMException
+				reject(new Error('Failed to execute \'close\' on \'AudioContext\': Cannot close a closed AudioContext'))
+				return
+			}
+
+			this._setState('closed')
+			resolve()
+		})
+	}
+
+	public async resume(): Promise<void> {
+		return new Promise((
+			resolve: (value: void | PromiseLike<void>) => void,
+			reject: (reason?: any) => void,
+		) => {
+			if (this._state === 'closed') {
+				// DOMException
+				reject(new Error('Failed to execute \'resume\' on \'AudioContext\': Cannot resume a closed AudioContext'))
+				return
+			}
+
+			if (this._state === 'running') {
+				resolve()
+				return
+			}
+
+			this._setState('running')
+			resolve()
+		})
+	}
+
+	public async suspend(): Promise<void> {
+		return new Promise((
+			resolve: (value: void | PromiseLike<void>) => void,
+			reject: (reason?: any) => void,
+		) => {
+			if (this._state === 'closed') {
+				// DOMException
+				reject(new Error('Failed to execute \'suspend\' on \'AudioContext\': Cannot suspend a closed AudioContext'))
+				return
+			}
+
+			if (this._state === 'suspended') {
+				resolve()
+				return
+			}
+
+			this._setState('suspended')
+			resolve()
+		})
 	}
 }

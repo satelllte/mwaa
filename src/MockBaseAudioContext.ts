@@ -78,12 +78,10 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 		this._sampleRate = sampleRate
 	}
 
-	// eslint-disable-next-line no-warning-comments
-	// TODO: try this approach
-	// protected _setState(state: AudioContextState): void {
-	// 	this._state = state
-	// 	this.dispatchEvent(new Event('statechange'))
-	// }
+	protected _setState(state: AudioContextState): void {
+		this._state = state
+		this.dispatchEvent(new Event('statechange'))
+	}
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: test
