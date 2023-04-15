@@ -1,3 +1,6 @@
+import {MockDelayNode} from './MockDelayNode'
+import {MockGainNode} from './MockGainNode'
+
 type StateChangeListener = ((ev: Event) => any) | null // eslint-disable-line @typescript-eslint/ban-types
 
 export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioContext,
@@ -13,9 +16,7 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 | 'createChannelSplitter'
 | 'createConstantSource'
 | 'createConvolver'
-| 'createDelay'
 | 'createDynamicsCompressor'
-| 'createGain'
 | 'createIIRFilter'
 | 'createOscillator'
 | 'createPanner'
@@ -97,6 +98,22 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 		}
 
 		this._stateChangeListener = null
+	}
+
+	public createDelay(maxDelayTime?: number | undefined): DelayNode {
+		// eslint-disable-next-line no-warning-comments
+		// TODO: once MockDelayNode implements everything from DelayNode, this will be removed
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		return new MockDelayNode(this, {maxDelayTime})
+	}
+
+	public createGain(): GainNode {
+		// eslint-disable-next-line no-warning-comments
+		// TODO: once MockGainNode implements everything from GainNode, this will be removed
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		return new MockGainNode(this)
 	}
 
 	protected _setState(state: AudioContextState): void {

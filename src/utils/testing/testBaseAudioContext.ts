@@ -7,6 +7,7 @@ export const testBaseAudioContext = (createContext: ContextCreatorFn): void => {
 	testBaseAudioContextCurrentTime(createContext)
 	testBaseAudioContextState(createContext)
 	testBaseAudioContextSampleRate(createContext)
+	testBaseAudioContextNodeCreators(createContext)
 }
 
 const testBaseAudioContextInstance = (createContext: ContextCreatorFn): void => {
@@ -58,6 +59,30 @@ const testBaseAudioContextSampleRate = (createContext: ContextCreatorFn): void =
 			// @ts-expect-error for testing
 			ctx.sampleRate = sampleRate + 10
 			expect(ctx.sampleRate).toEqual(sampleRate)
+		})
+	})
+}
+
+const testBaseAudioContextNodeCreators = (createContext: ContextCreatorFn): void => {
+	describe('BaseAudioContext.createDelay', () => {
+		it('constructs DelayNode', () => {
+			const ctx: BaseAudioContext = createContext()
+			const node: DelayNode = ctx.createDelay()
+			expect(node).toBeInstanceOf(DelayNode)
+			expect(node.delayTime.maxValue).toEqual(1)
+		})
+		it('constructs DelayNode with maxDelayTime', () => {
+			const ctx: BaseAudioContext = createContext()
+			const node: DelayNode = ctx.createDelay(7)
+			expect(node.delayTime.maxValue).toEqual(7)
+		})
+	})
+
+	describe('BaseAudioContext.createGain', () => {
+		it('constructs GainNode', () => {
+			const ctx: BaseAudioContext = createContext()
+			const node: GainNode = ctx.createGain()
+			expect(node).toBeInstanceOf(GainNode)
 		})
 	})
 }
