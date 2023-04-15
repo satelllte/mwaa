@@ -43,7 +43,7 @@ const testAudioContextEventTarget = (): void => {
 			type: 'statechange',
 		})
 
-		it('fires on state change', async () => {
+		it('works with addEventListener / removeEventListener methods', async () => {
 			const ctx: AudioContext = new AudioContext()
 			const listenerSpy: Mock = vi.fn()
 			ctx.addEventListener('statechange', listenerSpy)
@@ -51,12 +51,26 @@ const testAudioContextEventTarget = (): void => {
 			await ctx.suspend()
 			expect(listenerSpy).toHaveBeenCalledTimes(1)
 			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
-			await ctx.resume()
-			expect(listenerSpy).toHaveBeenCalledTimes(2)
-			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
 			ctx.removeEventListener('statechange', listenerSpy)
+			await ctx.resume()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
 			await ctx.close()
-			expect(listenerSpy).toHaveBeenCalledTimes(2)
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+		})
+
+		it('works with onstatechange method', async () => {
+			const ctx: AudioContext = new AudioContext()
+			const listenerSpy: Mock = vi.fn()
+			expect(ctx.onstatechange).toEqual(null)
+			ctx.onstatechange = listenerSpy
+			expect(ctx.onstatechange).toEqual(listenerSpy)
+			expect(listenerSpy).toHaveBeenCalledTimes(0)
+			await ctx.suspend()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
+			ctx.onstatechange = null
+			await ctx.resume()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
 		})
 	})
 }

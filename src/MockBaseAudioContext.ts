@@ -1,9 +1,10 @@
+type StateChangeListener = ((ev: Event) => any) | null // eslint-disable-line @typescript-eslint/ban-types
+
 export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioContext,
 // BaseAudioContext
 | 'audioWorklet'
 | 'destination'
 | 'listener'
-| 'onstatechange'
 | 'createAnalyser'
 | 'createBiquadFilter'
 | 'createBuffer'
@@ -32,6 +33,7 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 		return sampleRate >= MockBaseAudioContext._sampleRateMin && sampleRate <= MockBaseAudioContext._sampleRateMax
 	}
 
+	private static _STATECHANGE: 'statechange' = 'statechange' as const // eslint-disable-line @typescript-eslint/naming-convention
 	private static _currentTimeDefault: number = 0
 	private static _sampleRateDefault: number = 44100
 	private static _sampleRateMin: number = 8000 // Min sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
@@ -57,6 +59,7 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 
 	protected _state: AudioContextState
 	private _sampleRate: number
+	private _onStateChangeListener: StateChangeListener = null
 
 	protected constructor(
 		state: AudioContextState,
@@ -78,9 +81,27 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 		this._sampleRate = sampleRate
 	}
 
+	public get onstatechange(): StateChangeListener {
+		return this._onStateChangeListener
+	}
+
+	public set onstatechange(listener: StateChangeListener) {
+		if (this._onStateChangeListener) {
+			this.removeEventListener(MockBaseAudioContext._STATECHANGE, this._onStateChangeListener)
+		}
+
+		if (typeof listener === 'function') {
+			this.addEventListener(MockBaseAudioContext._STATECHANGE, listener)
+			this._onStateChangeListener = listener
+			return
+		}
+
+		this._onStateChangeListener = null
+	}
+
 	protected _setState(state: AudioContextState): void {
 		this._state = state
-		this.dispatchEvent(new Event('statechange'))
+		this.dispatchEvent(new Event(MockBaseAudioContext._STATECHANGE))
 	}
 
 	// eslint-disable-next-line no-warning-comments
