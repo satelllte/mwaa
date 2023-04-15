@@ -10,9 +10,10 @@ export const testBaseAudioContext = (createContext: ContextCreatorFn): void => {
 }
 
 const testBaseAudioContextInstance = (createContext: ContextCreatorFn): void => {
-	it('initializes an instance of context which extends BaseAudioContext', () => {
+	it('initializes an instance of context which extends BaseAudioContext & EventTarget', () => {
 		const ctx: BaseAudioContext = createContext()
 		expect(ctx).toBeInstanceOf(BaseAudioContext)
+		expect(ctx).toBeInstanceOf(EventTarget)
 	})
 }
 
