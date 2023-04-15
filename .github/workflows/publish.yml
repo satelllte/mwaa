@@ -5,9 +5,6 @@ on:
 
 jobs:
   release:
-    permissions:
-      packages: write
-      contents: read
     strategy:
       matrix:
         node-version: ['18.x']
