@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 jobs:
-  release:
+  publish:
     strategy:
       matrix:
         node-version: ['18.x']
