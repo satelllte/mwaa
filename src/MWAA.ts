@@ -5,6 +5,7 @@ import {MockAudioParam} from './MockAudioParam'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 import {MockDelayNode} from './MockDelayNode'
 import {MockGainNode} from './MockGainNode'
+import {MockOfflineAudioContext} from './MockOfflineAudioContext'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export class MWAA {
@@ -19,6 +20,7 @@ export class MWAA {
 		MWAA._mock('BaseAudioContext', MockBaseAudioContext as unknown as BaseAudioContext, MWAA._originalBaseAudioContext)
 		MWAA._mock('DelayNode', MockDelayNode as unknown as DelayNode, MWAA._originalDelayNode)
 		MWAA._mock('GainNode', MockGainNode as unknown as GainNode, MWAA._originalGainNode)
+		MWAA._mock('OfflineAudioContext', MockOfflineAudioContext as unknown as OfflineAudioContext, MWAA._originalOfflineAudioContext)
 
 		MWAA._isMocked = true
 	}
@@ -34,6 +36,7 @@ export class MWAA {
 		MWAA._unmock('BaseAudioContext', MWAA._originalBaseAudioContext)
 		MWAA._unmock('DelayNode', MWAA._originalDelayNode)
 		MWAA._unmock('GainNode', MWAA._originalGainNode)
+		MWAA._unmock('OfflineAudioContext', MWAA._originalOfflineAudioContext)
 
 		MWAA._isMocked = false
 	}
@@ -45,6 +48,7 @@ export class MWAA {
 	private static _originalBaseAudioContext: BaseAudioContext
 	private static _originalDelayNode: DelayNode
 	private static _originalGainNode: GainNode
+	private static _originalOfflineAudioContext: OfflineAudioContext
 
 	private static _mock<T>(
 		name: ModuleName,

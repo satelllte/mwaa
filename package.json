@@ -3,13 +3,22 @@
   "version": "0.1.0-alpha.0",
   "description": "Mocked version of Web Audio API",
   "keywords": [
+    "audio",
+    "audio-mock",
+    "audio-library",
+    "web-audio",
     "web-audio-api",
     "web-audio-api-mock",
-    "web-audio",
+    "web-audio-library",
     "web-audio-mock",
     "testing",
     "test",
-    "mock"
+    "mock",
+    "mock-audio",
+    "sound",
+    "dsp",
+    "typescript",
+    "mwaa"
   ],
   "license": "MIT",
   "repository": {

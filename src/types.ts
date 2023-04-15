@@ -7,3 +7,4 @@ export type ModuleName = AudioNodeName
 | 'AudioNode'
 | 'AudioParam'
 | 'BaseAudioContext'
+| 'OfflineAudioContext'

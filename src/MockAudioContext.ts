@@ -4,10 +4,6 @@ import {clamp} from './utils/math/clamp'
 type LatencyHint = AudioContextLatencyCategory | number
 
 export class MockAudioContext extends MockBaseAudioContext implements Omit<AudioContext,
-// EventTarget
-| 'addEventListener'
-| 'removeEventListener'
-| 'dispatchEvent'
 // BaseAudioContext
 | 'audioWorklet'
 | 'destination'
@@ -38,8 +34,8 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 | 'createMediaStreamDestination'
 | 'createMediaStreamSource'
 | 'getOutputTimestamp'
-| 'resume'
 | 'suspend'
+| 'resume'
 > {
 	private static _defaultLatencyHint: AudioContextLatencyCategory | number = 'interactive'
 	private static _baseLatencyMin: number = 0.0001
@@ -114,7 +110,13 @@ export class MockAudioContext extends MockBaseAudioContext implements Omit<Audio
 	private _outputLatency: number
 
 	constructor(options?: AudioContextOptions) {
-		super(options?.sampleRate)
+		// eslint-disable-next-line no-warning-comments
+		// TODO: in the future Autoplay policy behaviour can also be simulated,
+		// so the context might also equal to `suspended` by default:
+		// https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy
+		const state: AudioContextState = 'running'
+
+		super(state, options?.sampleRate)
 
 		const latencyHint: LatencyHint = options?.latencyHint ?? MockAudioContext._defaultLatencyHint
 		MockAudioContext._validateLatencyHint(latencyHint)
