@@ -59,7 +59,7 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 
 	protected _state: AudioContextState
 	private _sampleRate: number
-	private _onStateChangeListener: StateChangeListener = null
+	private _stateChangeListener: StateChangeListener = null
 
 	protected constructor(
 		state: AudioContextState,
@@ -82,21 +82,21 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 	}
 
 	public get onstatechange(): StateChangeListener {
-		return this._onStateChangeListener
+		return this._stateChangeListener
 	}
 
 	public set onstatechange(listener: StateChangeListener) {
-		if (this._onStateChangeListener) {
-			this.removeEventListener(MockBaseAudioContext._STATECHANGE, this._onStateChangeListener)
+		if (this._stateChangeListener) {
+			this.removeEventListener(MockBaseAudioContext._STATECHANGE, this._stateChangeListener)
 		}
 
 		if (typeof listener === 'function') {
 			this.addEventListener(MockBaseAudioContext._STATECHANGE, listener)
-			this._onStateChangeListener = listener
+			this._stateChangeListener = listener
 			return
 		}
 
-		this._onStateChangeListener = null
+		this._stateChangeListener = null
 	}
 
 	protected _setState(state: AudioContextState): void {
