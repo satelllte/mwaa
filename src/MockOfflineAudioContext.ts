@@ -100,4 +100,43 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		// TODO: figure out why this warns in c8 coverage though it's tested in "throws if 2 arguments passed" test
 		throw new TypeError('Failed to construct \'OfflineAudioContext\': Overload resolution failed.')
 	}
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: implement
+	// public async resume(): Promise<void> {
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case context closed, throw:
+	// 	// DOMException: Failed to execute 'resume' on 'OfflineAudioContext': cannot resume an offline context that has not started
+	// 	throw new Error('Method not implemented.')
+	// }
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: implement
+	// public async suspend(suspendTime: number): Promise<void> {
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case no suspendTime given, throw:
+	// 	// TypeError: Failed to execute 'suspend' on 'OfflineAudioContext': 1 argument required, but only 0 present.
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case context closed, throw:
+	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': the rendering is already finished
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case suspendTime < 0:
+	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': negative suspend time (-1) is not allowed
+	// 	throw new Error('Method not implemented.')
+	// }
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: implement
+	// public async startRendering(): Promise<AudioBuffer> {
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case context closed, throw:
+	// 	// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering on an OfflineAudioContext in a stopped state.
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: if called more than once, throw:
+	// 	// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering more than once
+	// 	throw new Error('Method not implemented.')
+	// }
 }
