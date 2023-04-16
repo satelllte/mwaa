@@ -15,6 +15,10 @@ jobs:
         node-version: ['16.x', '18.x']
         test-env: ['node', 'jsdom', 'happy-dom']
 
+    permissions:
+      contents: read # Allows to checkout the code
+      pull-requests: write # Allows to put a comment into the pull-request
+
     runs-on: ubuntu-latest
 
     steps:
@@ -31,5 +35,7 @@ jobs:
       env:
         VITEST_ENV: ${{ matrix.test-env }}
       run: npm run test:lib -- --environment ${{ matrix.test-env }}
+    - name: Report Coverage
+      uses:  davelosert/vitest-coverage-report-action@v1
     - name: Test lint
       run: npm run test:lint
