@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['16.x', '18.x']
-        test-env: ['node', 'happy-dom']
+        test-env: ['node', 'jsdom', 'happy-dom']
 
     runs-on: ubuntu-latest
 
