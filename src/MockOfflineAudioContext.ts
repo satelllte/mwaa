@@ -5,7 +5,6 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 | 'audioWorklet'
 | 'destination'
 | 'listener'
-| 'onstatechange'
 | 'createAnalyser'
 | 'createBiquadFilter'
 | 'createBuffer'
