@@ -24,7 +24,6 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 | 'decodeAudioData'
 // OfflineAudioContext
 | 'oncomplete'
-| 'resume'
 | 'startRendering'
 | 'suspend'
 > {
@@ -59,6 +58,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		}
 	}
 
+	private _started: boolean = false
 	private _length: number
 
 	constructor(contextOptions: OfflineAudioContextOptions)
@@ -99,13 +99,37 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 	}
 
 	// eslint-disable-next-line no-warning-comments
-	// TODO: implement
-	// public async resume(): Promise<void> {
-	// 	// eslint-disable-next-line no-warning-comments
-	// 	// TODO: in case context closed, throw:
-	// 	// DOMException: Failed to execute 'resume' on 'OfflineAudioContext': cannot resume an offline context that has not started
+	// TODO: implement AudioBuffer first
+	// public async startRendering(): Promise<AudioBuffer> {
 	// 	throw new Error('Method not implemented.')
+	// 	return new Promise((
+	// 		resolve: (value: void | PromiseLike<void>) => void,
+	// 		reject: (reason?: any) => void,
+	// 	) => {
+	// 		// eslint-disable-next-line no-warning-comments
+	// 		// TODO: in case context closed, throw:
+	// 		// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering on an OfflineAudioContext in a stopped state.
+
+	// 		// eslint-disable-next-line no-warning-comments
+	// 		// TODO: if called more than once, throw:
+	// 		// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering more than once
+	// 	})
 	// }
+
+	public async resume(): Promise<void> {
+		return new Promise((
+			resolve: (value: void | PromiseLike<void>) => void,
+			reject: (reason?: any) => void,
+		) => {
+			if (!this._started || this._state === 'closed') {
+				// DOMException
+				reject(new Error('Failed to execute \'resume\' on \'OfflineAudioContext\': cannot resume an offline context that has not started'))
+				return
+			}
+
+			resolve()
+		})
+	}
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: implement
@@ -126,19 +150,6 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 	// 	// eslint-disable-next-line no-warning-comments
 	// 	// TODO: in case suspendTime < currentTime, throw:
 	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': suspend(${suspendTime}) failed to suspend at frame ${FRAME} because it is earlier than the current frame of ${CURRENT_FRAME} (${currentTime} seconds)
-	// 	throw new Error('Method not implemented.')
-	// }
-
-	// eslint-disable-next-line no-warning-comments
-	// TODO: implement
-	// public async startRendering(): Promise<AudioBuffer> {
-	// 	// eslint-disable-next-line no-warning-comments
-	// 	// TODO: in case context closed, throw:
-	// 	// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering on an OfflineAudioContext in a stopped state.
-
-	// 	// eslint-disable-next-line no-warning-comments
-	// 	// TODO: if called more than once, throw:
-	// 	// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering more than once
 	// 	throw new Error('Method not implemented.')
 	// }
 }
