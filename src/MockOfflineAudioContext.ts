@@ -122,6 +122,11 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 	// 	// TODO: in case suspendTime < 0:
 	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': negative suspend time (-1) is not allowed
 	// 	throw new Error('Method not implemented.')
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case suspendTime < currentTime, throw:
+	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': suspend(${suspendTime}) failed to suspend at frame ${FRAME} because it is earlier than the current frame of ${CURRENT_FRAME} (${currentTime} seconds)
+	// 	throw new Error('Method not implemented.')
 	// }
 
 	// eslint-disable-next-line no-warning-comments
