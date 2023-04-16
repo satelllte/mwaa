@@ -9,7 +9,7 @@
 To run the library tests, use this command:
 
 ```sh
-npm run test:lib -- --environment $ENVIRONMENT
+VITEST_ENV=$ENVIRONMENT npm run test:lib -- --environment $ENVIRONMENT
 ```
 
 where `$ENVIRONMENT` is one of:

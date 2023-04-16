@@ -1,4 +1,5 @@
 import {type Mock, afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
+import {builtinEnvironments} from 'vitest/environments'
 import {testBaseAudioContext} from './utils/testing/testBaseAudioContext'
 import {MWAA} from './MWAA'
 import {MockAudioContext} from './MockAudioContext'
@@ -57,8 +58,10 @@ const testAudioContextEventTarget = (): void => {
 		})
 
 		// eslint-disable-next-line no-warning-comments
-		// TODO: fix
-		it.todo('works with onstatechange method', async () => {
+		// TODO: this doesn't work in happy-dom for some reason, so skipping for now
+		it.skipIf(
+			process.env.VITEST_ENV === builtinEnvironments['happy-dom'].name,
+		)('works with onstatechange method', async () => {
 			const ctx: AudioContext = new AudioContext()
 			const listenerSpy: Mock = vi.fn()
 			expect(ctx.onstatechange).toEqual(null)
@@ -67,7 +70,7 @@ const testAudioContextEventTarget = (): void => {
 			expect(listenerSpy).toHaveBeenCalledTimes(0)
 			await ctx.suspend()
 			// eslint-disable-next-line no-warning-comments
-			// TODO: figure out why it fires 2 times here
+			// TODO: figure out why it fires 2 times here in happy-dom
 			expect(listenerSpy).toHaveBeenCalledTimes(1)
 			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
 			ctx.onstatechange = null

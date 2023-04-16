@@ -28,6 +28,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Test library
+      env:
+        VITEST_ENV: ${{ matrix.test-env }}
       run: npm run test:lib -- --environment ${{ matrix.test-env }}
     - name: Test lint
       run: npm run test:lint
