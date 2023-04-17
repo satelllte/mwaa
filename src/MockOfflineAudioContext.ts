@@ -27,6 +27,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 | 'oncomplete'
 | 'startRendering'
 | 'suspend'
+| 'resume'
 > {
 	public get length(): number {
 		return this._length
@@ -114,20 +115,22 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 	// 	})
 	// }
 
-	public async resume(): Promise<void> {
-		return new Promise((
-			resolve: (value: void | PromiseLike<void>) => void,
-			reject: (reason?: any) => void,
-		) => {
-			if (!this._started || this._state === 'closed') {
-				// DOMException
-				reject(new Error('Failed to execute \'resume\' on \'OfflineAudioContext\': cannot resume an offline context that has not started'))
-				return
-			}
+	// eslint-disable-next-line no-warning-comments
+	// TODO: to be tested
+	// public async resume(): Promise<void> {
+	// 	return new Promise((
+	// 		resolve: (value: void | PromiseLike<void>) => void,
+	// 		reject: (reason?: any) => void,
+	// 	) => {
+	// 		if (!this._started || this._state === 'closed') {
+	// 			// DOMException
+	// 			reject(new Error('Failed to execute \'resume\' on \'OfflineAudioContext\': cannot resume an offline context that has not started'))
+	// 			return
+	// 		}
 
-			resolve()
-		})
-	}
+	// 		resolve()
+	// 	})
+	// }
 
 	// eslint-disable-next-line no-warning-comments
 	// TODO: implement
