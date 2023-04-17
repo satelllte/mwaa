@@ -36,7 +36,7 @@ jobs:
         VITEST_ENV: ${{ matrix.test-env }}
       run: npm run test:lib -- --environment ${{ matrix.test-env }}
     - name: Report Coverage
-      if: matrix.node-version == '18.x' && matrix.test-env == 'node'
+      if: always() && matrix.node-version == '18.x' && matrix.test-env == 'node' # always() means it'll run even if coverage failed but only on 'node', '18.x'
       uses: davelosert/vitest-coverage-report-action@v1
     - name: Test lint
       run: npm run test:lint
