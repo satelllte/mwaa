@@ -1,4 +1,5 @@
 import {describe, expect, it} from 'vitest'
+import {MockAudioBuffer} from './MockAudioBuffer'
 import {MockAudioContext} from './MockAudioContext'
 import {MockAudioNode} from './MockAudioNode'
 import {MockAudioParam} from './MockAudioParam'
@@ -39,6 +40,7 @@ const confirmWebAudioApiUndefined = (): void => {
 		expect(globalThisObject).toBeUndefined()
 	}
 
+	confirm(globalThis.AudioBuffer)
 	confirm(globalThis.AudioContext)
 	confirm(globalThis.AudioNode)
 	confirm(globalThis.AudioParam)
@@ -54,6 +56,7 @@ const confirmWebAudioApiDefined = (): void => {
 		expect(globalThisObject).toEqual(mock)
 	}
 
+	confirm(globalThis.AudioBuffer, MockAudioBuffer)
 	confirm(globalThis.AudioContext, MockAudioContext)
 	confirm(globalThis.AudioNode, MockAudioNode)
 	confirm(globalThis.AudioParam, MockAudioParam)

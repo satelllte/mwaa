@@ -3,6 +3,7 @@ export type AudioNodeName =
 | 'GainNode'
 
 export type ModuleName = AudioNodeName
+| 'AudioBuffer'
 | 'AudioContext'
 | 'AudioNode'
 | 'AudioParam'
