@@ -3,7 +3,6 @@ import {numberOfChannelsDefault, numberOfChannelsMax, numberOfChannelsMin, sampl
 export class MockAudioBuffer implements Omit<AudioBuffer,
 | 'copyFromChannel'
 | 'copyToChannel'
-| 'getChannelData'
 > {
 	public get length(): number {
 		return this._length
@@ -65,5 +64,18 @@ export class MockAudioBuffer implements Omit<AudioBuffer,
 		this._length = length
 		this._numberOfChannels = numberOfChannels
 		this._sampleRate = sampleRate
+	}
+
+	public getChannelData(channel: number): Float32Array {
+		if (typeof channel === 'undefined') {
+			throw new TypeError(`Failed to execute 'getChannelData' on '${MockAudioBuffer._className}': 1 argument required, but only 0 present.`)
+		}
+
+		if (!Number.isFinite(channel) || channel < 0 || channel > this._numberOfChannels - 1) {
+			// DOMException
+			throw new Error(`Failed to execute 'getChannelData' on '${MockAudioBuffer._className}': channel index (${channel}) exceeds number of channels (${this._numberOfChannels})`)
+		}
+
+		return new Float32Array(this._length)
 	}
 }

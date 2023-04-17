@@ -20,7 +20,7 @@ describe('MockAudioBuffer', () => {
 	})
 
 	const sampleRate: number = 11025
-	const duration: number = 1.5
+	const duration: number = 2
 	const length: number = sampleRate * duration
 
 	describe('constructor', () => {
@@ -174,6 +174,46 @@ describe('MockAudioBuffer', () => {
 			// @ts-expect-error for testing
 			buffer.duration = duration * 2
 			expect(buffer.duration).toEqual(duration)
+		})
+	})
+
+	describe('getChannelData()', () => {
+		const numberOfChannels: number = 2
+
+		it('results with Float32Array data', () => {
+			const buffer: AudioBuffer = new AudioBuffer({length, sampleRate, numberOfChannels})
+			const data: Float32Array = buffer.getChannelData(0)
+			expect(data).toBeInstanceOf(Float32Array)
+			expect(data.length).toEqual(length)
+		})
+
+		it('throws if no channel argument', () => {
+			const buffer: AudioBuffer = new AudioBuffer({length, sampleRate, numberOfChannels})
+			expect(() =>
+				// @ts-expect-error for testing
+				buffer.getChannelData(),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to execute \'getChannelData\' on \'AudioBuffer\': 1 argument required, but only 0 present."')
+		})
+
+		it('throws if channel is out of range', () => {
+			const buffer: AudioBuffer = new AudioBuffer({length, sampleRate, numberOfChannels})
+			expect(() =>
+				buffer.getChannelData(-1),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to execute \'getChannelData\' on \'AudioBuffer\': channel index (-1) exceeds number of channels (2)"')
+			expect(() =>
+				buffer.getChannelData(2),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to execute \'getChannelData\' on \'AudioBuffer\': channel index (2) exceeds number of channels (2)"')
+		})
+
+		it('throws if channel type is not finite number', () => {
+			const buffer: AudioBuffer = new AudioBuffer({length, sampleRate, numberOfChannels})
+			expect(() =>
+				buffer.getChannelData(Infinity),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to execute \'getChannelData\' on \'AudioBuffer\': channel index (Infinity) exceeds number of channels (2)"')
+			expect(() =>
+				// @ts-expect-error for testing
+				buffer.getChannelData('x'),
+			).toThrowErrorMatchingInlineSnapshot('"Failed to execute \'getChannelData\' on \'AudioBuffer\': channel index (x) exceeds number of channels (2)"')
 		})
 	})
 })
