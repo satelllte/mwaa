@@ -1,9 +1,14 @@
+import {sampleRateMax, sampleRateMin} from './constants'
+import {MockDelayNode} from './MockDelayNode'
+import {MockGainNode} from './MockGainNode'
+
+type StateChangeListener = ((ev: Event) => any) | null // eslint-disable-line @typescript-eslint/ban-types
+
 export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioContext,
 // BaseAudioContext
 | 'audioWorklet'
 | 'destination'
 | 'listener'
-| 'onstatechange'
 | 'createAnalyser'
 | 'createBiquadFilter'
 | 'createBuffer'
@@ -12,9 +17,7 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 | 'createChannelSplitter'
 | 'createConstantSource'
 | 'createConvolver'
-| 'createDelay'
 | 'createDynamicsCompressor'
-| 'createGain'
 | 'createIIRFilter'
 | 'createOscillator'
 | 'createPanner'
@@ -32,10 +35,11 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 		return sampleRate >= MockBaseAudioContext._sampleRateMin && sampleRate <= MockBaseAudioContext._sampleRateMax
 	}
 
+	private static _STATECHANGE: 'statechange' = 'statechange' as const // eslint-disable-line @typescript-eslint/naming-convention
 	private static _currentTimeDefault: number = 0
 	private static _sampleRateDefault: number = 44100
-	private static _sampleRateMin: number = 8000 // Min sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
-	private static _sampleRateMax: number = 96000 // Max sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
+	private static _sampleRateMin: number = sampleRateMin
+	private static _sampleRateMax: number = sampleRateMax
 
 	public get currentTime(): number {
 		return MockBaseAudioContext._currentTimeDefault
@@ -57,6 +61,7 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 
 	protected _state: AudioContextState
 	private _sampleRate: number
+	private _stateChangeListener: StateChangeListener = null
 
 	protected constructor(
 		state: AudioContextState,
@@ -78,22 +83,42 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 		this._sampleRate = sampleRate
 	}
 
-	// eslint-disable-next-line no-warning-comments
-	// TODO: try this approach
-	// protected _setState(state: AudioContextState): void {
-	// 	this._state = state
-	// 	this.dispatchEvent(new Event('statechange'))
-	// }
+	public get onstatechange(): StateChangeListener {
+		return this._stateChangeListener
+	}
 
-	// eslint-disable-next-line no-warning-comments
-	// TODO: test
-	// public addEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
-	// 	super.addEventListener(type, listener, options)
-	// }
+	public set onstatechange(listener: StateChangeListener) {
+		if (this._stateChangeListener) {
+			this.removeEventListener(MockBaseAudioContext._STATECHANGE, this._stateChangeListener)
+		}
 
-	// eslint-disable-next-line no-warning-comments
-	// TODO: test
-	// public removeEventListener<K extends keyof BaseAudioContextEventMap>(type: K, listener: (this: BaseAudioContext, ev: BaseAudioContextEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
-	// 	super.removeEventListener(type, listener, options)
-	// }
+		if (typeof listener === 'function') {
+			this.addEventListener(MockBaseAudioContext._STATECHANGE, listener)
+			this._stateChangeListener = listener
+			return
+		}
+
+		this._stateChangeListener = null
+	}
+
+	public createDelay(maxDelayTime?: number | undefined): DelayNode {
+		// eslint-disable-next-line no-warning-comments
+		// TODO: once MockDelayNode implements everything from DelayNode, this will be removed
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		return new MockDelayNode(this, {maxDelayTime})
+	}
+
+	public createGain(): GainNode {
+		// eslint-disable-next-line no-warning-comments
+		// TODO: once MockGainNode implements everything from GainNode, this will be removed
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		return new MockGainNode(this)
+	}
+
+	protected _setState(state: AudioContextState): void {
+		this._state = state
+		this.dispatchEvent(new Event(MockBaseAudioContext._STATECHANGE))
+	}
 }

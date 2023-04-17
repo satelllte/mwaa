@@ -9,12 +9,13 @@
 To run the library tests, use this command:
 
 ```sh
-npm run test:lib -- --environment $ENVIRONMENT
+VITEST_ENV=$ENVIRONMENT npm run test:lib -- --environment $ENVIRONMENT
 ```
 
 where `$ENVIRONMENT` is one of:
 
 - `node`
+- `jsdom`
 - `happy-dom`
 
 By default the tests are going to run in watch mode. But when the `process.env.CI` is present, they're gonna run in default mode returning the result of the test run. For more information, see [Vitest: Watch Mode](https://vitest.dev/guide/features.html#watch-mode) documentation.

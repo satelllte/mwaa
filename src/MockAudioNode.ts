@@ -1,3 +1,5 @@
+import {numberOfChannelsMax, numberOfChannelsMin} from './constants'
+
 type MockAudioNodeOptions = AudioNodeOptions & {
 	context?: BaseAudioContext;
 	numberOfInputs: number;
@@ -53,8 +55,8 @@ export class MockAudioNode implements Omit<AudioNode,
 	}
 
 	private static _channelCountDefault: number = 2
-	private static _channelCountMin: number = 1
-	private static _channelCountMax: number = 32
+	private static _channelCountMin: number = numberOfChannelsMin
+	private static _channelCountMax: number = numberOfChannelsMax
 	private static _channelCountModeDefault: ChannelCountMode = 'max'
 	private static _channelInterpretationDefault: ChannelInterpretation = 'speakers'
 

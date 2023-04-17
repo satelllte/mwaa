@@ -1,3 +1,4 @@
+import {numberOfChannelsDefault, numberOfChannelsMax, numberOfChannelsMin} from './constants'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 
 export class MockOfflineAudioContext extends MockBaseAudioContext implements Omit<OfflineAudioContext,
@@ -5,7 +6,6 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 | 'audioWorklet'
 | 'destination'
 | 'listener'
-| 'onstatechange'
 | 'createAnalyser'
 | 'createBiquadFilter'
 | 'createBuffer'
@@ -14,9 +14,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 | 'createChannelSplitter'
 | 'createConstantSource'
 | 'createConvolver'
-| 'createDelay'
 | 'createDynamicsCompressor'
-| 'createGain'
 | 'createIIRFilter'
 | 'createOscillator'
 | 'createPanner'
@@ -27,9 +25,9 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 | 'decodeAudioData'
 // OfflineAudioContext
 | 'oncomplete'
-| 'resume'
 | 'startRendering'
 | 'suspend'
+| 'resume'
 > {
 	public get length(): number {
 		return this._length
@@ -37,15 +35,12 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 
 	public set length(length: number) {} // Prevents modifications
 
-	private static _numberOfChannelsDefault: number = 1
-	private static _numberOfChannelsMin: number = 1
-	private static _numberOfChannelsMax: number = 32
 	private static _lengthMin: number = 1
 
 	private static _validateNumberOfChannels(numberOfChannels: number): void {
-		if (!Number.isFinite(numberOfChannels) || numberOfChannels < MockOfflineAudioContext._numberOfChannelsMin || numberOfChannels > MockOfflineAudioContext._numberOfChannelsMax) {
+		if (!Number.isFinite(numberOfChannels) || numberOfChannels < numberOfChannelsMin || numberOfChannels > numberOfChannelsMax) {
 			// DOMException
-			throw new Error(`Failed to construct 'OfflineAudioContext': The number of channels provided (${numberOfChannels}) is outside the range [${MockOfflineAudioContext._numberOfChannelsMin}, ${MockOfflineAudioContext._numberOfChannelsMax}]`)
+			throw new Error(`Failed to construct 'OfflineAudioContext': The number of channels provided (${numberOfChannels}) is outside the range [${numberOfChannelsMin}, ${numberOfChannelsMax}]`)
 		}
 	}
 
@@ -62,6 +57,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		}
 	}
 
+	private _started: boolean = false
 	private _length: number
 
 	constructor(contextOptions: OfflineAudioContextOptions)
@@ -71,7 +67,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 
 		if (args.length === 1) {
 			const contextOptions: OfflineAudioContextOptions = args[0]
-			const numberOfChannels: number = contextOptions?.numberOfChannels ?? MockOfflineAudioContext._numberOfChannelsDefault
+			const numberOfChannels: number = contextOptions?.numberOfChannels ?? numberOfChannelsDefault
 			const length: number = contextOptions?.length
 			const sampleRate: number = contextOptions?.sampleRate
 			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
@@ -100,4 +96,61 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 		// TODO: figure out why this warns in c8 coverage though it's tested in "throws if 2 arguments passed" test
 		throw new TypeError('Failed to construct \'OfflineAudioContext\': Overload resolution failed.')
 	}
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: implement AudioBuffer first
+	// public async startRendering(): Promise<AudioBuffer> {
+	// 	throw new Error('Method not implemented.')
+	// 	return new Promise((
+	// 		resolve: (value: void | PromiseLike<void>) => void,
+	// 		reject: (reason?: any) => void,
+	// 	) => {
+	// 		// eslint-disable-next-line no-warning-comments
+	// 		// TODO: in case context closed, throw:
+	// 		// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering on an OfflineAudioContext in a stopped state.
+
+	// 		// eslint-disable-next-line no-warning-comments
+	// 		// TODO: if called more than once, throw:
+	// 		// DOMException: Failed to execute 'startRendering' on 'OfflineAudioContext': cannot call startRendering more than once
+	// 	})
+	// }
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: to be tested
+	// public async resume(): Promise<void> {
+	// 	return new Promise((
+	// 		resolve: (value: void | PromiseLike<void>) => void,
+	// 		reject: (reason?: any) => void,
+	// 	) => {
+	// 		if (!this._started || this._state === 'closed') {
+	// 			// DOMException
+	// 			reject(new Error('Failed to execute \'resume\' on \'OfflineAudioContext\': cannot resume an offline context that has not started'))
+	// 			return
+	// 		}
+
+	// 		resolve()
+	// 	})
+	// }
+
+	// eslint-disable-next-line no-warning-comments
+	// TODO: implement
+	// public async suspend(suspendTime: number): Promise<void> {
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case no suspendTime given, throw:
+	// 	// TypeError: Failed to execute 'suspend' on 'OfflineAudioContext': 1 argument required, but only 0 present.
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case context closed, throw:
+	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': the rendering is already finished
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case suspendTime < 0:
+	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': negative suspend time (-1) is not allowed
+	// 	throw new Error('Method not implemented.')
+
+	// 	// eslint-disable-next-line no-warning-comments
+	// 	// TODO: in case suspendTime < currentTime, throw:
+	// 	// DOMException: Failed to execute 'suspend' on 'OfflineAudioContext': suspend(${suspendTime}) failed to suspend at frame ${FRAME} because it is earlier than the current frame of ${CURRENT_FRAME} (${currentTime} seconds)
+	// 	throw new Error('Method not implemented.')
+	// }
 }

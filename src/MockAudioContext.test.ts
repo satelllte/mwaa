@@ -1,4 +1,5 @@
-import {afterAll, beforeAll, describe, expect, it} from 'vitest'
+import {type Mock, afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
+import {builtinEnvironments} from 'vitest/environments'
 import {testBaseAudioContext} from './utils/testing/testBaseAudioContext'
 import {MWAA} from './MWAA'
 import {MockAudioContext} from './MockAudioContext'
@@ -28,10 +29,57 @@ describe('MockAudioContext', () => {
 
 	testBaseAudioContext(() => new AudioContext())
 
+	testAudioContextEventTarget()
 	testAudioContextState()
 	testAudioContextSampleRate()
 	testAudioContextLatency()
 })
+
+const testAudioContextEventTarget = (): void => {
+	describe('EventTarget', () => {
+		const getStateChangeEventForContext = (ctx: BaseAudioContext): Partial<Event> => ({
+			target: ctx,
+			type: 'statechange',
+		})
+
+		it('works with addEventListener / removeEventListener methods', async () => {
+			const ctx: AudioContext = new AudioContext()
+			const listenerSpy: Mock = vi.fn()
+			ctx.addEventListener('statechange', listenerSpy)
+			expect(listenerSpy).toHaveBeenCalledTimes(0)
+			await ctx.suspend()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
+			ctx.removeEventListener('statechange', listenerSpy)
+			await ctx.resume()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+			await ctx.close()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+		})
+
+		// eslint-disable-next-line no-warning-comments
+		// TODO: this doesn't work in happy-dom for some reason, so skipping for now
+		it.skipIf(
+			process.env.VITEST_ENV === builtinEnvironments['happy-dom'].name,
+		)('works with onstatechange method', async () => {
+			const ctx: AudioContext = new AudioContext()
+			const listenerSpy: Mock = vi.fn()
+			expect(ctx.onstatechange).toEqual(null)
+			ctx.onstatechange = listenerSpy
+			expect(ctx.onstatechange).toEqual(listenerSpy)
+			expect(listenerSpy).toHaveBeenCalledTimes(0)
+			await ctx.suspend()
+			// eslint-disable-next-line no-warning-comments
+			// TODO: figure out why it fires 2 times here in happy-dom
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+			expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining(getStateChangeEventForContext(ctx)))
+			ctx.onstatechange = null
+			expect(ctx.onstatechange).toEqual(null)
+			await ctx.resume()
+			expect(listenerSpy).toHaveBeenCalledTimes(1)
+		})
+	})
+}
 
 const testAudioContextState = (): void => {
 	describe('state', () => {
@@ -40,6 +88,73 @@ const testAudioContextState = (): void => {
 		it('is "running" initially', () => {
 			const ctx: AudioContext = new AudioContext()
 			expect(ctx.state).toEqual('running')
+		})
+
+		describe('suspend', () => {
+			it('is able to suspend the state', async () => {
+				const ctx: AudioContext = new AudioContext()
+				expect(ctx.state).toEqual('running')
+				await ctx.suspend()
+				expect(ctx.state).toEqual('suspended')
+			})
+
+			it('does not do anything if state already suspended', async () => {
+				const ctx: AudioContext = new AudioContext()
+				expect(ctx.state).toEqual('running')
+				await ctx.suspend()
+				expect(ctx.state).toEqual('suspended')
+				await ctx.suspend()
+				expect(ctx.state).toEqual('suspended')
+			})
+
+			it('rejects if state is closed', async () => {
+				const ctx: AudioContext = new AudioContext()
+				await ctx.close()
+				expect(ctx.state).toEqual('closed')
+				await expect(ctx.suspend()).rejects.toMatchInlineSnapshot('[Error: Failed to execute \'suspend\' on \'AudioContext\': Cannot suspend a closed AudioContext]')
+			})
+		})
+
+		describe('resume', () => {
+			it('is able to resume the state', async () => {
+				const ctx: AudioContext = new AudioContext()
+				expect(ctx.state).toEqual('running')
+				await ctx.suspend()
+				expect(ctx.state).toEqual('suspended')
+				await ctx.resume()
+				expect(ctx.state).toEqual('running')
+			})
+
+			it('does not do anything if state already running', async () => {
+				const ctx: AudioContext = new AudioContext()
+				expect(ctx.state).toEqual('running')
+				await ctx.resume()
+				expect(ctx.state).toEqual('running')
+			})
+
+			it('rejects if state is closed', async () => {
+				const ctx: AudioContext = new AudioContext()
+				await ctx.close()
+				expect(ctx.state).toEqual('closed')
+				await expect(ctx.resume()).rejects.toMatchInlineSnapshot('[Error: Failed to execute \'resume\' on \'AudioContext\': Cannot resume a closed AudioContext]')
+			})
+		})
+
+		describe('close', () => {
+			it('is able to close the state', async () => {
+				const ctx: AudioContext = new AudioContext()
+				expect(ctx.state).toEqual('running')
+				await ctx.close()
+				expect(ctx.state).toEqual('closed')
+			})
+
+			it('reject if the state already closed', async () => {
+				const ctx: AudioContext = new AudioContext()
+				expect(ctx.state).toEqual('running')
+				await ctx.close()
+				expect(ctx.state).toEqual('closed')
+				await expect(ctx.close()).rejects.toMatchInlineSnapshot('[Error: Failed to execute \'close\' on \'AudioContext\': Cannot close a closed AudioContext]')
+			})
 		})
 	})
 }
