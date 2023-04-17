@@ -1,3 +1,4 @@
+import {numberOfChannelsDefault, numberOfChannelsMax, numberOfChannelsMin} from './constants'
 import {MockBaseAudioContext} from './MockBaseAudioContext'
 
 export class MockOfflineAudioContext extends MockBaseAudioContext implements Omit<OfflineAudioContext,
@@ -33,15 +34,12 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 
 	public set length(length: number) {} // Prevents modifications
 
-	private static _numberOfChannelsDefault: number = 1
-	private static _numberOfChannelsMin: number = 1
-	private static _numberOfChannelsMax: number = 32
 	private static _lengthMin: number = 1
 
 	private static _validateNumberOfChannels(numberOfChannels: number): void {
-		if (!Number.isFinite(numberOfChannels) || numberOfChannels < MockOfflineAudioContext._numberOfChannelsMin || numberOfChannels > MockOfflineAudioContext._numberOfChannelsMax) {
+		if (!Number.isFinite(numberOfChannels) || numberOfChannels < numberOfChannelsMin || numberOfChannels > numberOfChannelsMax) {
 			// DOMException
-			throw new Error(`Failed to construct 'OfflineAudioContext': The number of channels provided (${numberOfChannels}) is outside the range [${MockOfflineAudioContext._numberOfChannelsMin}, ${MockOfflineAudioContext._numberOfChannelsMax}]`)
+			throw new Error(`Failed to construct 'OfflineAudioContext': The number of channels provided (${numberOfChannels}) is outside the range [${numberOfChannelsMin}, ${numberOfChannelsMax}]`)
 		}
 	}
 
@@ -68,7 +66,7 @@ export class MockOfflineAudioContext extends MockBaseAudioContext implements Omi
 
 		if (args.length === 1) {
 			const contextOptions: OfflineAudioContextOptions = args[0]
-			const numberOfChannels: number = contextOptions?.numberOfChannels ?? MockOfflineAudioContext._numberOfChannelsDefault
+			const numberOfChannels: number = contextOptions?.numberOfChannels ?? numberOfChannelsDefault
 			const length: number = contextOptions?.length
 			const sampleRate: number = contextOptions?.sampleRate
 			MockOfflineAudioContext._validateNumberOfChannels(numberOfChannels)
