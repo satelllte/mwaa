@@ -1,3 +1,4 @@
+import {sampleRateMax, sampleRateMin} from './constants'
 import {MockDelayNode} from './MockDelayNode'
 import {MockGainNode} from './MockGainNode'
 
@@ -37,8 +38,8 @@ export class MockBaseAudioContext extends EventTarget implements Omit<BaseAudioC
 	private static _STATECHANGE: 'statechange' = 'statechange' as const // eslint-disable-line @typescript-eslint/naming-convention
 	private static _currentTimeDefault: number = 0
 	private static _sampleRateDefault: number = 44100
-	private static _sampleRateMin: number = 8000 // Min sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
-	private static _sampleRateMax: number = 96000 // Max sample rate guaranteed by all user-agents https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext
+	private static _sampleRateMin: number = sampleRateMin
+	private static _sampleRateMax: number = sampleRateMax
 
 	public get currentTime(): number {
 		return MockBaseAudioContext._currentTimeDefault
